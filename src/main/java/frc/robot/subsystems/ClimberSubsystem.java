@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+
 import frc.robot.Constants.MotorPorts;
 import frc.robot.Constants.PnuematicChannels;
 
@@ -27,8 +29,10 @@ public class ClimberSubsystem extends SubsystemBase {
     solenoid.set(DoubleSolenoid.Value.kForward);
   }
     
-  public void CloseDoor() {
-    
+  public void SetMotor(double speed) {    
+    talon.set(TalonSRXControlMode.PercentOutput, speed);
   }
+
+  
 
 }

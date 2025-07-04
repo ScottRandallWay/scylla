@@ -37,4 +37,7 @@ public final class Constants {
     public static final double MIN_POWER = -1;
   }  
   
+  public static final class TimeConstants {
+    public static final int TELEOP_SECONDS = 135;
+  }
 }

@@ -9,12 +9,15 @@ public class Settings {
   private static final String ALGAE_MOTOR_SPEED = "Algae Motor Speed";
   private static final String ALGAE_HOLD_SPEED = "Algae Hold Speed";
   private static final String ALGAE_EJECT_DELAY = "Algae Eject Seconds";
+  private static final String ENDGAME_SECONDS = "Endgame Seconds";
 
   //default values
   private static final double ALGAE_DETECT_DEFAULT = 0.2;
   private static final double ALGAE_MOTOR_DEFAULT = 0.30;
   private static final double ALGAE_HOLD_DEFAULT = 0;
   private static final int ALGAE_DELAY_DEFAULT = 1;
+  private static final int ENDGAME_DEFAULT = 30;
+
 
   public static final void Init() {
       if (!Preferences.containsKey(ALGAE_DETECT_VOLT)) {
@@ -29,6 +32,9 @@ public class Settings {
       if (!Preferences.containsKey(ALGAE_EJECT_DELAY)) {
         Preferences.initInt(ALGAE_EJECT_DELAY, ALGAE_DELAY_DEFAULT);
       }
+      if (!Preferences.containsKey(ENDGAME_SECONDS)) {
+        Preferences.initInt(ENDGAME_SECONDS, ENDGAME_DEFAULT);
+      }
       
     }
 
@@ -37,6 +43,7 @@ public class Settings {
       Preferences.setDouble(ALGAE_MOTOR_SPEED, ALGAE_MOTOR_DEFAULT);
       Preferences.setDouble(ALGAE_HOLD_SPEED, ALGAE_HOLD_DEFAULT);
       Preferences.setDouble(ALGAE_EJECT_DELAY, ALGAE_DELAY_DEFAULT);
+      Preferences.setInt(ENDGAME_SECONDS, ENDGAME_DEFAULT);
     }
 
     public static double getAlgaeDetectThreshold() {
@@ -53,6 +60,10 @@ public class Settings {
 
     public static double getAlgaeEjectDelaySeconds() {
       return Preferences.getDouble(ALGAE_EJECT_DELAY, ALGAE_DELAY_DEFAULT);
+    }
+
+    public static int getEndGameSeconds() {
+      return Preferences.getInt(ENDGAME_SECONDS, ENDGAME_DEFAULT);
     }
   
   
