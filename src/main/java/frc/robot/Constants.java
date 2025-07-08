@@ -2,6 +2,10 @@ package frc.robot;
 
 public final class Constants {
   
+  public static final class DashboardKeys {
+    public static final String DOOR_POSITION = "Door Position";
+  }
+  
   public static final class JoystickChannels {
     public static final int OPERATOR_RIGHT_JOYSTICK = 0;
     public static final int OPERATOR_LEFT_JOYSTICK = 1;
@@ -12,6 +16,10 @@ public final class Constants {
       public static final int ALGAE_GRAB_BUTTON = 3;
       public static final int ALGAE_SET_BUTTON = 4;
       public static final int ALGAE_RAISE_BUTTON = 5;
+    }
+    public static final class OperatorLeft {
+      public static final int DOOR_OPEN_BUTTON = 3;
+      public static final int DOOR_CLOSE_BUTTON = 4;
     }
   }
 
