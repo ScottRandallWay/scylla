@@ -3,13 +3,10 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-//import frc.robot.Dashboard;
 import frc.robot.Settings;
-import frc.robot.Util;
 import frc.robot.Constants.AnalogChannels;
 import frc.robot.Constants.MotorPorts;
 import frc.robot.Constants.PnuematicChannels;
@@ -29,7 +26,6 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
   }
 
   public void setSpeed(double speed) {
-    speed = Util.enforcePowerRange(speed);
     talon.set(ControlMode.PercentOutput, speed);
   }
    
