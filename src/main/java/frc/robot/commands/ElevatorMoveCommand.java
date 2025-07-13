@@ -32,6 +32,7 @@ public class ElevatorMoveCommand extends Command {
       } else {
         elevatorSub.SetSpeed(motorSpeed);
       }
+      elevatorSub.GetPostion();
     } else {
       elevatorSub.SetSpeed(0);
     }
