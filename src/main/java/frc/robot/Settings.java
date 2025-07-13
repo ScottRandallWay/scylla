@@ -15,6 +15,7 @@ public class Settings {
   private static final String DOOR_SLOW_ZONE = "Door Slow Zone";
   private static final String DOOR_TARGET_ZONE = "Door Target Zone";
   private static final String DOOR_CLOSED_SETPOINT = "Door Setpoint";
+  private static final String ELEVATOR_MANUAL_SPEED = "Elevator Manual";
 
   //default values
   private static final double ALGAE_DETECT_DEFAULT = 0.2;
@@ -27,6 +28,7 @@ public class Settings {
   private static final double DOOR_SLOW_ZONE_DEFAULT = 1500;
   private static final double DOOR_TARGET_DEFAULT = 250;
   private static final double DOOR_CLOSED_DEFAULT = 12500;
+  private static final double ELEVATOR_MANUAL_DEFAULT = 0.4;
 
   public static final void Init() {
       if (!Preferences.containsKey(ALGAE_DETECT_VOLT)) {
@@ -59,6 +61,9 @@ public class Settings {
       if (!Preferences.containsKey(DOOR_CLOSED_SETPOINT)) {
         Preferences.initDouble(DOOR_CLOSED_SETPOINT, DOOR_CLOSED_DEFAULT);
       }
+      if (!Preferences.containsKey(ELEVATOR_MANUAL_SPEED)) {
+        Preferences.initDouble(ELEVATOR_MANUAL_SPEED, ELEVATOR_MANUAL_DEFAULT);
+      } 
     } 
 
     public static final void Reset() {
@@ -72,6 +77,7 @@ public class Settings {
       Preferences.setDouble(DOOR_SLOW_ZONE, DOOR_SLOW_ZONE_DEFAULT);
       Preferences.setDouble(DOOR_TARGET_ZONE, DOOR_TARGET_DEFAULT);
       Preferences.setDouble(DOOR_CLOSED_SETPOINT, DOOR_CLOSED_DEFAULT);
+      Preferences.setDouble(ELEVATOR_MANUAL_SPEED, ELEVATOR_MANUAL_DEFAULT);
     }
 
     public static double getAlgaeDetectThreshold() {
@@ -112,5 +118,8 @@ public class Settings {
   
     public static double getDoorClosedSetpoint() {
       return Preferences.getDouble(DOOR_CLOSED_SETPOINT, DOOR_CLOSED_DEFAULT);
+    }
+    public static double getElevatorManualSpeed() {
+      return Preferences.getDouble(Settings.ELEVATOR_MANUAL_SPEED, Settings.ELEVATOR_MANUAL_DEFAULT);
     }
 }

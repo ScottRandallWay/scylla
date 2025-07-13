@@ -20,6 +20,8 @@ public final class Constants {
     public static final class OperatorLeft {
       public static final int DOOR_OPEN_BUTTON = 3;
       public static final int DOOR_CLOSE_BUTTON = 4;
+      public static final int CLIMB_UP_BUTTON = 5;
+      public static final int CLIMB_DOWN_BUTTON = 6;
     }
   }
 
@@ -38,6 +40,7 @@ public final class Constants {
   public static final class MotorPorts {
     public static final int ALGAE_GRABBER = 10;
     public static final int CLIMBER_DOOR = 11;
+    public static final int ELEVATOR_MOTOR = 12;
   }
 
   public static final class PowerConstants {

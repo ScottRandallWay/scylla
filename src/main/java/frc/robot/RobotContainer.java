@@ -5,14 +5,18 @@ package frc.robot;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.Constants.JoystickChannels;
 import frc.robot.Constants.ButtonIndex;
 import frc.robot.commands.AlgaeEjectCommand;
 import frc.robot.commands.AlgaeGrabCommand;
 import frc.robot.commands.AlgaeRaiseCommand;
 import frc.robot.commands.ClimbCloseCommand;
+import frc.robot.commands.ClimbDownCommand;
 import frc.robot.commands.ClimbMoveCommand;
 import frc.robot.commands.ClimbOpenCommand;
+import frc.robot.commands.ClimbUpCommand;
+import frc.robot.commands.ElevatorMoveCommand;
 import frc.robot.commands.LedBallCommand;
 import frc.robot.commands.LedFlashCommand;
 import frc.robot.Constants.PnuematicChannels;
@@ -30,6 +34,7 @@ public class RobotContainer {
   private final AlgaeGrabberSubsystem algaeGrabberSub;
   private final ClimberSubsystem climberSub;
   private final LedSubsystem ledSub;
+  private final ElevatorSubsystem evSub;
   private final Joystick operatorLeftJoystick;
   private final Joystick operatorRightJoystick;
   private final PneumaticHub hub;
@@ -46,6 +51,7 @@ public class RobotContainer {
     algaeGrabberSub = new AlgaeGrabberSubsystem(hub);
     climberSub = new ClimberSubsystem(hub);
     ledSub = new LedSubsystem();
+    evSub = new ElevatorSubsystem();
 
     // init triggers
     startTeleopTrigger = new Trigger(DriverStation::isTeleopEnabled);
@@ -59,6 +65,7 @@ public class RobotContainer {
     configureAlgaeBindings();
     configureLedBindings();
     configureClimberBindings();
+    configureElevatorBindings();
   }
 
   private void configureAlgaeBindings() {
@@ -92,6 +99,14 @@ public class RobotContainer {
       .onTrue(new ClimbOpenCommand(climberSub));
     new JoystickButton(operatorLeftJoystick, ButtonIndex.OperatorLeft.DOOR_CLOSE_BUTTON)
       .onTrue(new ClimbCloseCommand(climberSub));
+      new JoystickButton(operatorLeftJoystick, ButtonIndex.OperatorLeft.CLIMB_UP_BUTTON)
+      .onTrue(new ClimbUpCommand(climberSub));
+      new JoystickButton(operatorLeftJoystick, ButtonIndex.OperatorLeft.CLIMB_DOWN_BUTTON)
+      .onTrue(new ClimbDownCommand(climberSub));
+  }
+
+  private void configureElevatorBindings(){
+    evSub.setDefaultCommand(new ElevatorMoveCommand(evSub, () -> operatorLeftJoystick.getY()));
   }
 
   // public Command getAutonomousCommand() {
