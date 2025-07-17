@@ -10,6 +10,7 @@ public class ClimbMoveCommand extends Command {
   private final ClimberSubsystem climbSub;
   private final DoubleSupplier xAxis;
   private double motorSpeed;
+  private double deadZone;
   
   public ClimbMoveCommand(ClimberSubsystem subsystem, DoubleSupplier x) {
     climbSub = subsystem;
@@ -20,12 +21,13 @@ public class ClimbMoveCommand extends Command {
   @Override
   public void initialize() {
     motorSpeed = Settings.getDoorHighSpeed();
+    deadZone = Settings.getJoystickDeadzone();
   }
 
   @Override
   public void execute() {
     double x = xAxis.getAsDouble();
-    if (Math.abs(x) > 0.2) {
+    if (Math.abs(x) > deadZone) {
       if (x > 0) {
         climbSub.SetSpeed(motorSpeed * -1);
       } else {

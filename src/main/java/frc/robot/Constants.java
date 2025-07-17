@@ -31,11 +31,11 @@ public final class Constants {
   }
 
   public static final class PnuematicChannels {
-    public static final int PNEUMATIC_HUB_MODULE = 41;
-    public static final int CLIMBER_FORWARD = 15;
-    public static final int CLIMBER_REVERSE = 14;
-    public static final int ALGAE_GRABBER_FORWARD = 13;
     public static final int ALGAE_GRABBER_REVERSE = 12;
+    public static final int ALGAE_GRABBER_FORWARD = 13;
+    public static final int CLIMBER_REVERSE = 14;
+    public static final int CLIMBER_FORWARD = 15;
+    public static final int PNEUMATIC_HUB_MODULE = 41;
   }
 
   public static final class MotorPorts {

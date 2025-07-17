@@ -11,6 +11,7 @@ public class ElevatorMoveCommand extends Command {
   private final ElevatorSubsystem elevatorSub;
   private final DoubleSupplier yAxis;
   private double motorSpeed;
+  private double deadZone;
   
   public ElevatorMoveCommand(ElevatorSubsystem subsystem, DoubleSupplier y) {
     elevatorSub = subsystem;
@@ -21,12 +22,13 @@ public class ElevatorMoveCommand extends Command {
   @Override
   public void initialize() {
     motorSpeed = Settings.getElevatorManualSpeed();
+    deadZone = Settings.getJoystickDeadzone();
   }
 
   @Override
   public void execute() {
     double y = yAxis.getAsDouble();
-    if (Math.abs(y) > 0.2) {
+    if (Math.abs(y) > deadZone) {
       if (y > 0) {
         elevatorSub.SetSpeed(motorSpeed * -1);
       } else {
