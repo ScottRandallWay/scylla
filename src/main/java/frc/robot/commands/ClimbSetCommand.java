@@ -4,7 +4,7 @@ import frc.robot.Settings;
 import frc.robot.subsystems.ClimberSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class ClimbCloseCommand extends Command {
+public class ClimbSetCommand extends Command {
 
   private final ClimberSubsystem climbSub;
   private double setPoint;
@@ -13,9 +13,11 @@ public class ClimbCloseCommand extends Command {
   private double position;
   private double targetZone;
   private double slowZone;
+  private boolean close;
   
-  public ClimbCloseCommand(ClimberSubsystem subsystem) {
+  public ClimbSetCommand(ClimberSubsystem subsystem, boolean close) {
     climbSub = subsystem;
+    this.close = close;
     addRequirements(subsystem);
   }
 
@@ -23,7 +25,11 @@ public class ClimbCloseCommand extends Command {
   public void initialize() {
     motorHighSpeed = Settings.getDoorHighSpeed();
     motorLowSpeed = Settings.getDoorLowSpeed();
-    setPoint = Settings.getDoorClosedSetpoint();
+    if (close == false) {
+      setPoint = 0;
+    } else {
+      setPoint = Settings.getDoorClosedSetpoint();
+    }
     slowZone = Settings.getDoorSlowZone();
     targetZone = Settings.getDoorTargetZone();
   }
@@ -48,11 +54,11 @@ public class ClimbCloseCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    double error = setPoint - position;
+    double error = position - setPoint;
     if (Math.abs(error) < targetZone) {
       return true;
-    }  
-    return false;    
+    }
+    return false;
   }
 
 }

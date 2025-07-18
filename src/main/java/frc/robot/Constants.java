@@ -10,10 +10,14 @@ public final class Constants {
   public static final class JoystickChannels {
     public static final int OPERATOR_RIGHT_JOYSTICK = 0;
     public static final int OPERATOR_LEFT_JOYSTICK = 1;
+    public static final int DRIVER_RIGHT_JOYSTICK = 2;
+    public static final int DRIVER_LEFT_JOYSTICK = 3;
   }
 
   public static final class ButtonIndex {
     public static final class OperatorRight {
+      public static final int CORAL_IN_BUTTON = 1;
+      public static final int CORAL_OUT_BUTTON = 2;
       public static final int ALGAE_GRAB_BUTTON = 3;
       public static final int ALGAE_SET_BUTTON = 4;
       public static final int ALGAE_RAISE_BUTTON = 5;
@@ -39,6 +43,7 @@ public final class Constants {
   }
 
   public static final class MotorPorts {
+    public static final int CORAL_MOTOR = 9;
     public static final int ALGAE_GRABBER = 10;
     public static final int CLIMBER_DOOR = 11;
     public static final int ELEVATOR_MOTOR = 12;

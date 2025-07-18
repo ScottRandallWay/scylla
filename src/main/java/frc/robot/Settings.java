@@ -18,10 +18,11 @@ public class Settings {
   private static final String DOOR_CLOSED_SETPOINT = "Door Setpoint";
   private static final String ELEVATOR_MANUAL_SPEED = "Elevator Manual";
   private static final String JOYSTICK_DEADZONE = "Joystick Deadzone";
+  private static final String CORAL_SPEED = "Coral Speed";
 
   //default values
   private static final double ALGAE_DETECT_DEFAULT = 0.2;
-  private static final double ALGAE_MOTOR_DEFAULT = 0.40;
+  private static final double ALGAE_MOTOR_DEFAULT = 0.50;
   private static final double ALGAE_HOLD_DEFAULT = 0.05;
   private static final int ALGAE_DELAY_DEFAULT = 1;
   private static final int ENDGAME_DEFAULT = 30;
@@ -32,6 +33,7 @@ public class Settings {
   private static final double DOOR_CLOSED_DEFAULT = 12500;
   private static final double ELEVATOR_MANUAL_DEFAULT = 0.4;
   private static final double JOYSTICK_DEADZONE_DEFAULT = 0.2;
+  private static final double CORAL_SPEED_DEFAULT = 0.3;
 
   public static final void Init() {
       if (!Preferences.containsKey(ALGAE_DETECT_VOLT)) {
@@ -70,6 +72,9 @@ public class Settings {
       if (!Preferences.containsKey(JOYSTICK_DEADZONE)) {
         Preferences.initDouble(JOYSTICK_DEADZONE, JOYSTICK_DEADZONE_DEFAULT);
       }
+      if (!Preferences.containsKey(CORAL_SPEED)) {
+        Preferences.initDouble(CORAL_SPEED, CORAL_SPEED_DEFAULT);
+      }
     } 
 
     public static final void Reset() {
@@ -85,6 +90,7 @@ public class Settings {
       Preferences.setDouble(DOOR_CLOSED_SETPOINT, DOOR_CLOSED_DEFAULT);
       Preferences.setDouble(ELEVATOR_MANUAL_SPEED, ELEVATOR_MANUAL_DEFAULT);
       Preferences.setDouble(JOYSTICK_DEADZONE, JOYSTICK_DEADZONE_DEFAULT);
+      Preferences.setDouble(CORAL_SPEED, CORAL_SPEED_DEFAULT);
     }
 
     public static double getAlgaeDetectThreshold() {
@@ -133,5 +139,9 @@ public class Settings {
 
     public static double getJoystickDeadzone() {
       return Preferences.getDouble(JOYSTICK_DEADZONE, JOYSTICK_DEADZONE_DEFAULT);
+    }
+
+    public static double getCoralSpeed() {
+      return Preferences.getDouble(CORAL_SPEED, CORAL_SPEED_DEFAULT);
     }
 }

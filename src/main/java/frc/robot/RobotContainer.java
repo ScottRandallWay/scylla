@@ -5,17 +5,18 @@ package frc.robot;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.CoralSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.Constants.JoystickChannels;
 import frc.robot.Constants.ButtonIndex;
 import frc.robot.commands.AlgaeEjectCommand;
 import frc.robot.commands.AlgaeGrabCommand;
 import frc.robot.commands.AlgaeRaiseCommand;
-import frc.robot.commands.ClimbCloseCommand;
+import frc.robot.commands.ClimbSetCommand;
 import frc.robot.commands.ClimbDownCommand;
 import frc.robot.commands.ClimbMoveCommand;
-import frc.robot.commands.ClimbOpenCommand;
 import frc.robot.commands.ClimbUpCommand;
+import frc.robot.commands.CoralSetCommand;
 import frc.robot.commands.ElevatorMoveCommand;
 import frc.robot.commands.LedBallCommand;
 import frc.robot.commands.LedFlashCommand;
@@ -33,9 +34,12 @@ public class RobotContainer {
   private final AlgaeGrabberSubsystem algaeGrabberSub;
   private final ClimberSubsystem climberSub;
   private final LedSubsystem ledSub;
-  private final ElevatorSubsystem evSub;
-  private final Joystick operatorLeftJoystick;
-  private final Joystick operatorRightJoystick;
+  private final ElevatorSubsystem elevatorSub;
+  private final CoralSubsystem coralSub;
+  private final Joystick operatorLeftStick;
+  private final Joystick operatorRightStick;
+  private final Joystick driverLeftStick;
+  private final Joystick driverRightStick;
   private final PneumaticHub hub;
   private final Trigger startTeleopTrigger;
   private final Trigger endgameTrigger;
@@ -50,15 +54,18 @@ public class RobotContainer {
     algaeGrabberSub = new AlgaeGrabberSubsystem(hub);
     climberSub = new ClimberSubsystem(hub);
     ledSub = new LedSubsystem();
-    evSub = new ElevatorSubsystem();
+    elevatorSub = new ElevatorSubsystem();
+    coralSub = new CoralSubsystem();
 
     // init triggers
     startTeleopTrigger = new Trigger(DriverStation::isTeleopEnabled);
     endgameTrigger = new Trigger(DriverStation::isTeleopEnabled);
 
     // initi create joysticks
-    operatorLeftJoystick = new Joystick(JoystickChannels.OPERATOR_LEFT_JOYSTICK);
-    operatorRightJoystick = new Joystick(JoystickChannels.OPERATOR_RIGHT_JOYSTICK);
+    operatorLeftStick = new Joystick(JoystickChannels.OPERATOR_LEFT_JOYSTICK);
+    operatorRightStick = new Joystick(JoystickChannels.OPERATOR_RIGHT_JOYSTICK);
+    driverLeftStick = new Joystick(JoystickChannels.DRIVER_LEFT_JOYSTICK);
+    driverRightStick = new Joystick(JoystickChannels.DRIVER_RIGHT_JOYSTICK);
 
     // map controls to commands
     configureAlgaeBindings();
@@ -68,21 +75,21 @@ public class RobotContainer {
   }
 
   private void configureAlgaeBindings() {
-    new JoystickButton(operatorRightJoystick, ButtonIndex.OperatorRight.ALGAE_GRAB_BUTTON)
+    new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ALGAE_GRAB_BUTTON)
       .onTrue(
         Commands.sequence(
           new AlgaeGrabCommand(algaeGrabberSub), 
           new LedBallCommand(ledSub, algaeGrabberSub)
         )
       );
-    new JoystickButton(operatorRightJoystick, ButtonIndex.OperatorRight.ALGAE_SET_BUTTON)
+    new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ALGAE_SET_BUTTON)
       .onTrue(
         Commands.sequence(
           new AlgaeEjectCommand(algaeGrabberSub),
           new LedBallCommand(ledSub, algaeGrabberSub)
         )
       );
-    new JoystickButton(operatorRightJoystick, ButtonIndex.OperatorRight.ALGAE_RAISE_BUTTON)
+    new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ALGAE_RAISE_BUTTON)
       .onTrue(new AlgaeRaiseCommand(algaeGrabberSub));
   }
 
@@ -93,19 +100,23 @@ public class RobotContainer {
   }
 
   private void configureClimberBindings() {
-    climberSub.setDefaultCommand(new ClimbMoveCommand(climberSub, () -> operatorRightJoystick.getX()));
-    new JoystickButton(operatorLeftJoystick, ButtonIndex.OperatorLeft.DOOR_OPEN_BUTTON)
-      .onTrue(new ClimbOpenCommand(climberSub));
-    new JoystickButton(operatorLeftJoystick, ButtonIndex.OperatorLeft.DOOR_CLOSE_BUTTON)
-      .onTrue(new ClimbCloseCommand(climberSub));
-      new JoystickButton(operatorLeftJoystick, ButtonIndex.OperatorLeft.CLIMB_UP_BUTTON)
+    climberSub.setDefaultCommand(new ClimbMoveCommand(climberSub, () -> operatorRightStick.getX()));
+    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.DOOR_OPEN_BUTTON)
+      .onTrue(new ClimbSetCommand(climberSub, false));
+    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.DOOR_CLOSE_BUTTON)
+      .onTrue(new ClimbSetCommand(climberSub, true));
+      new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.CLIMB_UP_BUTTON)
       .onTrue(new ClimbUpCommand(climberSub));
-      new JoystickButton(operatorLeftJoystick, ButtonIndex.OperatorLeft.CLIMB_DOWN_BUTTON)
+      new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.CLIMB_DOWN_BUTTON)
       .onTrue(new ClimbDownCommand(climberSub));
   }
 
   private void configureElevatorBindings(){
-    evSub.setDefaultCommand(new ElevatorMoveCommand(evSub, () -> operatorLeftJoystick.getY()));
+    elevatorSub.setDefaultCommand(new ElevatorMoveCommand(elevatorSub, () -> operatorLeftStick.getY()));
+    new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.CORAL_IN_BUTTON)
+      .whileTrue(new CoralSetCommand(coralSub, false));
+    new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.CORAL_OUT_BUTTON)
+      .whileTrue(new CoralSetCommand(coralSub, true));
   }
 
   // public Command getAutonomousCommand() {
