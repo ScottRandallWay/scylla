@@ -12,7 +12,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   
   public ElevatorSubsystem() {
     talon = new TalonFX(MotorPorts.ELEVATOR_MOTOR);
-    setTalonConfig();     
+    ResetPositoion();  
   }
     
   public void SetSpeed(double speed) {   
@@ -26,7 +26,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     return position;
   }
 
-  public void setTalonConfig() {
+  public void ResetPositoion() {
     talon.setPosition(0.0);
     SmartDashboard.putNumber(DashboardKeys.ELEVATOR_POSITION, 0.0);
   }

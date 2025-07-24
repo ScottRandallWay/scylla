@@ -35,10 +35,6 @@ public class ClimberSubsystem extends SubsystemBase {
     talon.set(TalonSRXControlMode.PercentOutput, speed);
   }
 
-  //public void SetPostion(double pos) {
-  //  talon.set(TalonSRXControlMode.Position, pos);
-  //}
-
   public double GetPostion() {
     double position = talon.getSelectedSensorPosition(0);
     SmartDashboard.putNumber(DashboardKeys.DOOR_POSITION, position);

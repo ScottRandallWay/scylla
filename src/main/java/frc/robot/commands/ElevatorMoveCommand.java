@@ -28,11 +28,12 @@ public class ElevatorMoveCommand extends Command {
   @Override
   public void execute() {
     double y = yAxis.getAsDouble();
+    double position = elevatorSub.GetPostion();
     if (Math.abs(y) > deadZone) {
       if (y > 0) {
         elevatorSub.SetSpeed(motorSpeed * -1);
       } else {
-        elevatorSub.SetSpeed(motorSpeed);
+        elevatorSub.SetSpeed(motorSpeed / 2);
       }
       elevatorSub.GetPostion();
     } else {
