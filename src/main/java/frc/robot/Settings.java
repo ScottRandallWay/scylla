@@ -42,12 +42,12 @@ public class Settings {
   private static final double ELEVATOR_MANUAL_DEFAULT = 0.4;
   private static final double JOYSTICK_DEADZONE_DEFAULT = 0.2;
   private static final double CORAL_SPEED_DEFAULT = 0.3;
-  private static final double ELEVATOR_HIGH_SPEED_DEFAULT = 0.8;
+  private static final double ELEVATOR_HIGH_SPEED_DEFAULT = 0.5;
   private static final double ELEVATOR_LOW_SPEED_DEFAULT = 0.075;
-  private static final double ELEVATOR_HOLD_SPEED_DEFAULT = 0.075;
-  private static final double ELEVATOR_SLOW_ZONE_DEFAULT = 7;
-  private static final double ELEVATOR_TARGET_ZONE_DEFAULT = 0.15;
-  private static final double ELEVATOR_LEVEL1_SETPOINT_DEFAULT = 0;
+  private static final double ELEVATOR_HOLD_SPEED_DEFAULT = 0.2;
+  private static final double ELEVATOR_SLOW_ZONE_DEFAULT = 10;
+  private static final double ELEVATOR_TARGET_ZONE_DEFAULT = 0.5;
+  private static final double ELEVATOR_LEVEL1_SETPOINT_DEFAULT = 10;
   private static final double ELEVATOR_LEVEL2_SETPOINT_DEFAULT = 26;
   private static final double ELEVATOR_LEVEL3_SETPOINT_DEFAULT = 46;
   private static final double ELEVATOR_LEVEL4_SETPOINT_DEFAULT = 75;

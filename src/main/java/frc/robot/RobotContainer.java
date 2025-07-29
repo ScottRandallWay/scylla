@@ -15,6 +15,7 @@ import frc.robot.commands.AlgaeToggleCommand;
 import frc.robot.commands.ClimbSetCommand;
 import frc.robot.commands.ClimbMoveCommand;
 import frc.robot.commands.CoralSetCommand;
+import frc.robot.commands.ElevatorGoCommand;
 import frc.robot.commands.ElevatorMoveCommand;
 import frc.robot.commands.ElevatorSetCommand;
 import frc.robot.commands.LedBallCommand;
@@ -24,7 +25,6 @@ import frc.robot.Constants.TimeConstants;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -145,6 +145,9 @@ public class RobotContainer {
     
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ELEVATOR_LEVEL2)
       .onTrue(new ElevatorSetCommand(elevatorSub, 2));
+
+    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ELEVATOR_LEVEL3)
+      .onTrue(new ElevatorSetCommand(elevatorSub, 3));
     
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ELEVATOR_RESET_BUTTON)
       .onTrue(new RunCommand(() -> elevatorSub.ResetPositoion(), elevatorSub));

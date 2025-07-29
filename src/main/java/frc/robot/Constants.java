@@ -31,6 +31,7 @@ public final class Constants {
       public static final int CLIMB_UP_BUTTON = 5;
       public static final int CLIMB_DOWN_BUTTON = 6;
       public static final int ELEVATOR_LEVEL2 = 8;
+      public static final int ELEVATOR_LEVEL3 = 9;
     }
   }
 

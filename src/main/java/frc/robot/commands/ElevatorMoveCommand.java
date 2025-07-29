@@ -12,6 +12,7 @@ public class ElevatorMoveCommand extends Command {
   private final DoubleSupplier yAxis;
   private double motorSpeed;
   private double deadZone;
+  private double holdSpeed;
   
   public ElevatorMoveCommand(ElevatorSubsystem subsystem, DoubleSupplier y) {
     elevatorSub = subsystem;
@@ -22,22 +23,23 @@ public class ElevatorMoveCommand extends Command {
   @Override
   public void initialize() {
     motorSpeed = Settings.getElevatorManualSpeed();
+    holdSpeed = Settings.getElevatorHoldSpeed();
     deadZone = Settings.getJoystickDeadzone();
   }
 
   @Override
   public void execute() {
     double y = yAxis.getAsDouble();
-    double position = elevatorSub.GetPostion();
+    elevatorSub.GetPostion();
     if (Math.abs(y) > deadZone) {
       if (y > 0) {
-        elevatorSub.SetSpeed(motorSpeed * -1);
+        elevatorSub.SetSpeed((motorSpeed/2) * -1);
       } else {
-        elevatorSub.SetSpeed(motorSpeed / 2);
+        elevatorSub.SetSpeed(motorSpeed);
       }
       elevatorSub.GetPostion();
     } else {
-      elevatorSub.SetSpeed(0);
+      elevatorSub.SetSpeed(holdSpeed);
     }
   }
 
