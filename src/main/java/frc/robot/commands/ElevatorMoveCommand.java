@@ -13,6 +13,7 @@ public class ElevatorMoveCommand extends Command {
   private double motorSpeed;
   private double deadZone;
   private double holdSpeed;
+  private double gravityFactor;
   
   public ElevatorMoveCommand(ElevatorSubsystem subsystem, DoubleSupplier y) {
     elevatorSub = subsystem;
@@ -25,6 +26,7 @@ public class ElevatorMoveCommand extends Command {
     motorSpeed = Settings.getElevatorManualSpeed();
     holdSpeed = Settings.getElevatorHoldSpeed();
     deadZone = Settings.getJoystickDeadzone();
+    gravityFactor = Settings.getElevatorGravityFactor();
   }
 
   @Override
@@ -33,7 +35,7 @@ public class ElevatorMoveCommand extends Command {
     elevatorSub.GetPostion();
     if (Math.abs(y) > deadZone) {
       if (y > 0) {
-        elevatorSub.SetSpeed((motorSpeed/2) * -1);
+        elevatorSub.SetSpeed(motorSpeed * gravityFactor);
       } else {
         elevatorSub.SetSpeed(motorSpeed);
       }

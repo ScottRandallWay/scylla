@@ -140,15 +140,31 @@ public class RobotContainer {
     // manaul elevator movement
     elevatorSub.setDefaultCommand(new ElevatorMoveCommand(elevatorSub, () -> operatorLeftStick.getY()));
     
+    // home position
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ELEVATOR_HOME)
       .onTrue(new ElevatorSetCommand(elevatorSub, 0));
     
+    // level 2
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ELEVATOR_LEVEL2)
       .onTrue(new ElevatorSetCommand(elevatorSub, 2));
 
+    // level 3  
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ELEVATOR_LEVEL3)
       .onTrue(new ElevatorSetCommand(elevatorSub, 3));
-    
+
+    // level 4
+    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ELEVATOR_LEVEL4)
+      .onTrue(new ElevatorSetCommand(elevatorSub, 4));
+
+    // algae high  
+    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ALGAE_HIGH_BUTTON)
+      .onTrue(new ElevatorSetCommand(elevatorSub, 5));  
+
+    // algae low  
+    new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ALGAE_LOW_BUTTON)
+      .onTrue(new ElevatorSetCommand(elevatorSub, 6));      
+
+    // reset position  
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ELEVATOR_RESET_BUTTON)
       .onTrue(new RunCommand(() -> elevatorSub.ResetPositoion(), elevatorSub));
 

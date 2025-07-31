@@ -27,6 +27,9 @@ public class Settings {
   private static final String ELEVATOR_LEVEL2_SETPOINT = "Level 2 Setpoint";
   private static final String ELEVATOR_LEVEL3_SETPOINT = "Level 3 Setpoint";
   private static final String ELEVATOR_LEVEL4_SETPOINT = "Level 4 Setpoint";
+  private static final String ELEVATOR_ALGAE_HIGH_SETPOINT = "Algae High Setpoint";
+  private static final String ELEVATOR_ALGAE_LOW_SETPOINT = "Algae Low Setpoint";
+  private static final String ELEVATOR_GRAVITY_FACTOR = "Elevator Gravity Factor";
   
   //default values
   private static final double ALGAE_DETECT_DEFAULT = 0.2;
@@ -42,15 +45,18 @@ public class Settings {
   private static final double ELEVATOR_MANUAL_DEFAULT = 0.4;
   private static final double JOYSTICK_DEADZONE_DEFAULT = 0.2;
   private static final double CORAL_SPEED_DEFAULT = 0.3;
-  private static final double ELEVATOR_HIGH_SPEED_DEFAULT = 0.5;
+  private static final double ELEVATOR_HIGH_SPEED_DEFAULT = 0.9;
   private static final double ELEVATOR_LOW_SPEED_DEFAULT = 0.075;
-  private static final double ELEVATOR_HOLD_SPEED_DEFAULT = 0.2;
+  private static final double ELEVATOR_HOLD_SPEED_DEFAULT = 0.03;
   private static final double ELEVATOR_SLOW_ZONE_DEFAULT = 10;
   private static final double ELEVATOR_TARGET_ZONE_DEFAULT = 0.5;
   private static final double ELEVATOR_LEVEL1_SETPOINT_DEFAULT = 10;
   private static final double ELEVATOR_LEVEL2_SETPOINT_DEFAULT = 26;
   private static final double ELEVATOR_LEVEL3_SETPOINT_DEFAULT = 46;
   private static final double ELEVATOR_LEVEL4_SETPOINT_DEFAULT = 75;
+  private static final double ELEVATOR_ALGAE_HIGH_SETPOINT_DEFAULT = 50;
+  private static final double ELEVATOR_ALGAE_LOW_SETPOINT_DEFAULT = 32;
+  private static final double ELEVATOR_GRAVITY_FACTOR_DEFAULT = -0.75;
 
   public static final void Init() {
       if (!Preferences.containsKey(ALGAE_DETECT_VOLT)) {
@@ -122,6 +128,15 @@ public class Settings {
       if (!Preferences.containsKey(ELEVATOR_LEVEL4_SETPOINT)) {
         Preferences.initDouble(ELEVATOR_LEVEL4_SETPOINT, ELEVATOR_LEVEL4_SETPOINT_DEFAULT);
       }
+      if (!Preferences.containsKey(ELEVATOR_ALGAE_HIGH_SETPOINT)) {
+        Preferences.initDouble(ELEVATOR_ALGAE_HIGH_SETPOINT, ELEVATOR_ALGAE_HIGH_SETPOINT_DEFAULT);
+      }
+      if (!Preferences.containsKey(ELEVATOR_ALGAE_LOW_SETPOINT)) {
+        Preferences.initDouble(ELEVATOR_ALGAE_LOW_SETPOINT, ELEVATOR_ALGAE_LOW_SETPOINT_DEFAULT);
+      }
+      if (!Preferences.containsKey(ELEVATOR_GRAVITY_FACTOR)) {
+        Preferences.initDouble(ELEVATOR_GRAVITY_FACTOR, ELEVATOR_GRAVITY_FACTOR_DEFAULT);
+      }
      } 
 
     public static final void Reset() {
@@ -147,6 +162,9 @@ public class Settings {
       Preferences.setDouble(ELEVATOR_LEVEL2_SETPOINT, ELEVATOR_LEVEL2_SETPOINT_DEFAULT);
       Preferences.setDouble(ELEVATOR_LEVEL3_SETPOINT, ELEVATOR_LEVEL3_SETPOINT_DEFAULT);
       Preferences.setDouble(ELEVATOR_LEVEL4_SETPOINT, ELEVATOR_LEVEL4_SETPOINT_DEFAULT);
+      Preferences.setDouble(ELEVATOR_ALGAE_HIGH_SETPOINT, ELEVATOR_ALGAE_HIGH_SETPOINT_DEFAULT);
+      Preferences.setDouble(ELEVATOR_ALGAE_LOW_SETPOINT, ELEVATOR_ALGAE_LOW_SETPOINT_DEFAULT);
+      Preferences.setDouble(ELEVATOR_GRAVITY_FACTOR, ELEVATOR_GRAVITY_FACTOR_DEFAULT);
     }
 
     public static double getAlgaeDetectThreshold() {
@@ -231,9 +249,16 @@ public class Settings {
           return Preferences.getDouble(ELEVATOR_LEVEL3_SETPOINT, ELEVATOR_LEVEL3_SETPOINT_DEFAULT);
         case 4: 
           return Preferences.getDouble(ELEVATOR_LEVEL4_SETPOINT, ELEVATOR_LEVEL4_SETPOINT_DEFAULT);
+        case 5:
+        return Preferences.getDouble(ELEVATOR_ALGAE_HIGH_SETPOINT, ELEVATOR_ALGAE_HIGH_SETPOINT_DEFAULT);
+        case 6:
+        return Preferences.getDouble(ELEVATOR_ALGAE_LOW_SETPOINT, ELEVATOR_ALGAE_LOW_SETPOINT_DEFAULT);           
         default:
           return 0;
       }
     }
 
+    public static double getElevatorGravityFactor() {
+      return Preferences.getDouble(ELEVATOR_GRAVITY_FACTOR, ELEVATOR_GRAVITY_FACTOR_DEFAULT);
+    }
 }

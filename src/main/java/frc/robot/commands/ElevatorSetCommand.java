@@ -2,9 +2,6 @@ package frc.robot.commands;
 
 import frc.robot.Settings;
 import frc.robot.subsystems.ElevatorSubsystem;
-
-import java.util.EventListener;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -19,9 +16,9 @@ public class ElevatorSetCommand extends Command {
   private double position;
   private double targetZone;
   private double slowZone;
+  private double gravityFactor;
   private double accel;
   private int level;
-  private Timer timer;
   
   public ElevatorSetCommand(ElevatorSubsystem subsystem, int level) {
     this.level = level;
@@ -49,9 +46,12 @@ public class ElevatorSetCommand extends Command {
 
     // stop within this proximity
     targetZone = Settings.getElevatorTargetZone();
+
+    // factor to reduce power when going down
+    gravityFactor = Settings.getElevatorGravityFactor();
     
     // starting postion when command starts
-    //startingPosition = elevatorSub.GetPostion();
+    startingPosition = elevatorSub.GetPostion();
     
     // rate of acceleration 
     accel = (highSpeed - lowSpeed) / slowZone;
@@ -67,7 +67,8 @@ public class ElevatorSetCommand extends Command {
     double error = setPoint - position;
 
     // get distance from starting position
-    //double startError = position - startingPosition;
+    double startError = position - startingPosition;
+    startError *= 3;
     
     // set default speed
     double speed = highSpeed;
@@ -76,9 +77,9 @@ public class ElevatorSetCommand extends Command {
     if (Math.abs(error) < slowZone) {
       speed = (Math.abs(error) * accel) + lowSpeed;
     } 
-    //else if (Math.abs(startError) < slowZone) {
-    //  speed = highSpeed * accel + lowSpeed;
-    //}
+    else if (Math.abs(startError) < slowZone) {
+      speed = (Math.abs(startError) * accel) + lowSpeed;
+    }
 
     System.out.println("speed: " + speed);
     System.out.println("error: " + error);
@@ -87,7 +88,7 @@ public class ElevatorSetCommand extends Command {
     if (error > 0) {
       elevatorSub.SetSpeed(speed);
     } else {
-      elevatorSub.SetSpeed(speed * -1);
+      elevatorSub.SetSpeed(speed * gravityFactor);
     }
   }
 
