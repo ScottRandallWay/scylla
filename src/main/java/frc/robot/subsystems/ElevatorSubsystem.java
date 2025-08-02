@@ -54,8 +54,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   private void SetConfiguration() {
 
     var magicMotionConfig = new MotionMagicConfigs()
-      .withMotionMagicAcceleration(20)
-      .withMotionMagicCruiseVelocity(15);
+      .withMotionMagicAcceleration(200)
+      .withMotionMagicCruiseVelocity(75);
 
     var motorOutputConfig = new MotorOutputConfigs()
       .withInverted(InvertedValue.CounterClockwise_Positive)
@@ -64,11 +64,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     var slot0Config = new Slot0Configs()
       .withGravityType(GravityTypeValue.Elevator_Static)
       .withKA(0)
-      .withKG(0.25)
-      .withKP(1.0)
-      .withKS(4.0)
-      .withKV(1.0)
-      .withKD(0.01);
+      .withKG(0.075)
+      .withKP(4.0)
+      .withKI(0.15)
+      .withKS(0.0)
+      .withKV(0.0)
+      .withKD(0.02);
 
     var talonFXConfig = new TalonFXConfiguration()
       .withMotorOutput(motorOutputConfig)

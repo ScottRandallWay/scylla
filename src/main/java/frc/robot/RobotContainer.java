@@ -138,11 +138,16 @@ public class RobotContainer {
   private void configureElevatorBindings(){
     
     // manaul elevator movement
-    elevatorSub.setDefaultCommand(new ElevatorMoveCommand(elevatorSub, () -> operatorLeftStick.getY()));
+    elevatorSub.setDefaultCommand(new ElevatorMoveCommand(elevatorSub, () -> operatorLeftStick.getY(), 
+        () -> operatorRightStick.getRawButton(ButtonIndex.OperatorRight.OVERRIDE_BUTTON)));
     
     // home position
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ELEVATOR_HOME)
       .onTrue(new ElevatorSetCommand(elevatorSub, 0));
+
+    // PID level 3
+    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ELEVATOR_LEVEL1)
+      .onTrue(new ElevatorGoCommand(elevatorSub, 3));
     
     // level 2
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ELEVATOR_LEVEL2)

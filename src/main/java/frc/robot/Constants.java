@@ -24,6 +24,7 @@ public final class Constants {
       public static final int ALGAE_LOWER_BUTTON = 6;
       public static final int ALGAE_LOW_BUTTON = 7;
       public static final int ELEVATOR_HOME = 8;
+      public static final int OVERRIDE_BUTTON = 9;
       public static final int ELEVATOR_RESET_BUTTON = 10;
     }
     public static final class OperatorLeft {
@@ -32,6 +33,7 @@ public final class Constants {
       public static final int DOOR_CLOSE_BUTTON = 4;
       public static final int CLIMB_UP_BUTTON = 5;
       public static final int CLIMB_DOWN_BUTTON = 6;
+      public static final int ELEVATOR_LEVEL1 = 7;
       public static final int ELEVATOR_LEVEL2 = 8;
       public static final int ELEVATOR_LEVEL3 = 9;
       public static final int ELEVATOR_LEVEL4 = 10;

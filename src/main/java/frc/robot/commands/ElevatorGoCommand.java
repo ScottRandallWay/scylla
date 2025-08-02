@@ -8,12 +8,6 @@ public class ElevatorGoCommand extends Command {
 
   private final ElevatorSubsystem elevatorSub;
   private double setPoint;
-  private double highSpeed;
-  private double lowSpeed;
-  private double holdSpeed;
-  private double position;
-  private double targetZone;
-  private double slowZone;
   private int level;
   
   public ElevatorGoCommand(ElevatorSubsystem subsystem, int level) {
