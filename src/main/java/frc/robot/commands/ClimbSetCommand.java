@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import frc.robot.Settings;
 import frc.robot.subsystems.ClimberSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class ClimbSetCommand extends Command {
@@ -37,6 +38,7 @@ public class ClimbSetCommand extends Command {
   @Override
   public void execute() {
     position = climbSub.GetPostion();
+    SmartDashboard.putNumber("door position", position);
     double error = setPoint - position;    
     double speed = motorHighSpeed;
     if (Math.abs(error) < slowZone) {

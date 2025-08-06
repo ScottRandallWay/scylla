@@ -15,6 +15,7 @@ import frc.robot.commands.AlgaeToggleCommand;
 import frc.robot.commands.ClimbSetCommand;
 import frc.robot.commands.ClimbMoveCommand;
 import frc.robot.commands.CoralSetCommand;
+import frc.robot.commands.ElevatorGoCommand;
 import frc.robot.commands.ElevatorMoveCommand;
 import frc.robot.commands.ElevatorSetCommand;
 import frc.robot.commands.LedBallCommand;
@@ -24,7 +25,6 @@ import frc.robot.Constants.TimeConstants;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -128,24 +128,48 @@ public class RobotContainer {
     
     // lower piston
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.CLIMB_UP_BUTTON)
-      .onTrue(new RunCommand(() -> algaeGrabberSub.raise(), algaeGrabberSub));
+      .onTrue(new RunCommand(() -> climberSub.Lower(), climberSub));
     
     // raise piston
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.CLIMB_DOWN_BUTTON)
-      .onTrue(new RunCommand(() -> algaeGrabberSub.lower(), algaeGrabberSub));
+      .onTrue(new RunCommand(() -> climberSub.Raise(), climberSub));
   }
 
   private void configureElevatorBindings(){
     
     // manaul elevator movement
-    elevatorSub.setDefaultCommand(new ElevatorMoveCommand(elevatorSub, () -> operatorLeftStick.getY()));
+    elevatorSub.setDefaultCommand(new ElevatorMoveCommand(elevatorSub, () -> operatorLeftStick.getY(), 
+        () -> operatorRightStick.getRawButton(ButtonIndex.OperatorRight.OVERRIDE_BUTTON)));
     
+    // home position
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ELEVATOR_HOME)
       .onTrue(new ElevatorSetCommand(elevatorSub, 0));
+
+    // PID level 3
+    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ELEVATOR_LEVEL1)
+      .onTrue(new ElevatorGoCommand(elevatorSub, 3));
     
+    // level 2
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ELEVATOR_LEVEL2)
       .onTrue(new ElevatorSetCommand(elevatorSub, 2));
-    
+
+    // level 3  
+    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ELEVATOR_LEVEL3)
+      .onTrue(new ElevatorSetCommand(elevatorSub, 3));
+
+    // level 4
+    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ELEVATOR_LEVEL4)
+      .onTrue(new ElevatorSetCommand(elevatorSub, 4));
+
+    // algae high  
+    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ALGAE_HIGH_BUTTON)
+      .onTrue(new ElevatorSetCommand(elevatorSub, 5));  
+
+    // algae low  
+    new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ALGAE_LOW_BUTTON)
+      .onTrue(new ElevatorSetCommand(elevatorSub, 6));      
+
+    // reset position  
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ELEVATOR_RESET_BUTTON)
       .onTrue(new RunCommand(() -> elevatorSub.ResetPositoion(), elevatorSub));
 
