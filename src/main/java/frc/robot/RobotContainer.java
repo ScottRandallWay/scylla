@@ -128,11 +128,11 @@ public class RobotContainer {
     
     // lower piston
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.CLIMB_UP_BUTTON)
-      .onTrue(new RunCommand(() -> algaeGrabberSub.raise(), algaeGrabberSub));
+      .onTrue(new RunCommand(() -> climberSub.Lower(), climberSub));
     
     // raise piston
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.CLIMB_DOWN_BUTTON)
-      .onTrue(new RunCommand(() -> algaeGrabberSub.lower(), algaeGrabberSub));
+      .onTrue(new RunCommand(() -> climberSub.Raise(), climberSub));
   }
 
   private void configureElevatorBindings(){
