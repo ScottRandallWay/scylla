@@ -256,9 +256,11 @@ public class Settings {
         case 4: 
           return Preferences.getDouble(ELEVATOR_LEVEL4_SETPOINT, ELEVATOR_LEVEL4_SETPOINT_DEFAULT);
         case 5:
-        return Preferences.getDouble(ELEVATOR_ALGAE_HIGH_SETPOINT, ELEVATOR_ALGAE_HIGH_SETPOINT_DEFAULT);
+          return Preferences.getDouble(ELEVATOR_ALGAE_HIGH_SETPOINT, ELEVATOR_ALGAE_HIGH_SETPOINT_DEFAULT);
         case 6:
-        return Preferences.getDouble(ELEVATOR_ALGAE_LOW_SETPOINT, ELEVATOR_ALGAE_LOW_SETPOINT_DEFAULT);           
+          return Preferences.getDouble(ELEVATOR_ALGAE_LOW_SETPOINT, ELEVATOR_ALGAE_LOW_SETPOINT_DEFAULT);
+        case 7:
+          return Preferences.getDouble(ELEVATOR_HOME_TRAVEL_POSITION, ELEVATOR_HOME_TRAVEL_POSITION_DEFAULT);           
         default:
           return 0;
       }

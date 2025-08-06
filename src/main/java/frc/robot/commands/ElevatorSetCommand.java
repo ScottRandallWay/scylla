@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import frc.robot.Settings;
 import frc.robot.subsystems.ElevatorSubsystem;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class ElevatorSetCommand extends Command {

@@ -28,6 +28,7 @@ public final class Constants {
       public static final int ELEVATOR_RESET_BUTTON = 10;
     }
     public static final class OperatorLeft {
+      public static final int HOME_TRAVEL_BUTTON = 1;
       public static final int ALGAE_HIGH_BUTTON = 2;
       public static final int DOOR_OPEN_BUTTON = 3;
       public static final int DOOR_CLOSE_BUTTON = 4;

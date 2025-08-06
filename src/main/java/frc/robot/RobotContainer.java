@@ -169,6 +169,9 @@ public class RobotContainer {
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ALGAE_LOW_BUTTON)
       .onTrue(new ElevatorSetCommand(elevatorSub, 6));      
 
+    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.HOME_TRAVEL_BUTTON)
+      .onTrue(new ElevatorSetCommand(elevatorSub, 7));
+
     // reset position  
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ELEVATOR_RESET_BUTTON)
       .onTrue(new RunCommand(() -> elevatorSub.ResetPositoion(), elevatorSub));
