@@ -1,7 +1,9 @@
 package frc.robot;
 
-
 //import frc.robot.commands.Autos;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+import static edu.wpi.first.units.Units.*;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -28,7 +30,11 @@ import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class RobotContainer {
 
@@ -44,8 +50,26 @@ public class RobotContainer {
   private final PneumaticHub hub;
   private final Trigger startTeleopTrigger;
   private final Trigger endgameTrigger;
+  private double MaxSpeed;
+  private double MaxAngularRate;
+  private final SwerveRequest.FieldCentric drive;
+  private final SwerveRequest.SwerveDriveBrake brake;
+  private final SwerveRequest.PointWheelsAt point;
+  private final Telemetry logger;
+  public final CommandSwerveDrivetrain drivetrain;
 
   public RobotContainer() {
+
+    // swerve systems
+    MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    drive = new SwerveRequest.FieldCentric()
+      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+    brake = new SwerveRequest.SwerveDriveBrake();
+    point = new SwerveRequest.PointWheelsAt();
+    logger = new Telemetry(MaxSpeed);
+    drivetrain = TunerConstants.createDrivetrain();
 
     // init pnuematics
     hub = new PneumaticHub(PnuematicChannels.PNEUMATIC_HUB_MODULE);
@@ -69,10 +93,26 @@ public class RobotContainer {
     driverRightStick = new Joystick(JoystickChannels.DRIVER_RIGHT_JOYSTICK);
 
     // map controls to commands
+    configureSwerveBindings();
     configureAlgaeBindings();
     configureLedBindings();
     configureClimberBindings();
     configureElevatorBindings();
+  }
+
+  private void configureSwerveBindings() {
+      drivetrain.setDefaultCommand(
+          drivetrain.applyRequest(() ->
+              drive.withVelocityX(-driverLeftStick.getY() * MaxSpeed) // Drive forward with negative Y (forward)
+                  .withVelocityY(-driverLeftStick.getX() * MaxSpeed) // Drive left with negative X (left)
+                  .withRotationalRate(-driverRightStick.getZ() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+          )
+      );
+      final var idle = new SwerveRequest.Idle();
+      RobotModeTriggers.disabled().whileTrue(
+          drivetrain.applyRequest(() -> idle).ignoringDisable(true)
+      );
+      drivetrain.registerTelemetry(logger::telemeterize);
   }
 
   private void configureAlgaeBindings() {
