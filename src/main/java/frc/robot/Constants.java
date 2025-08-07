@@ -15,6 +15,12 @@ public final class Constants {
   }
 
   public static final class ButtonIndex {
+    public static final class DriverRight {
+      public static final int PRECISION_MODE_BUTTON = 1;
+    }
+    public static final class DriverLeft {
+      public static final int TURBO_MODE_BUTTON = 1;
+    }
     public static final class OperatorRight {
       public static final int CORAL_IN_BUTTON = 1;
       public static final int CORAL_OUT_BUTTON = 2;

@@ -24,13 +24,16 @@ import frc.robot.commands.LedBallCommand;
 import frc.robot.commands.LedFlashCommand;
 import frc.robot.Constants.PnuematicChannels;
 import frc.robot.Constants.TimeConstants;
+import frc.robot.Constants.ButtonIndex.DriverLeft;
+import frc.robot.Constants.ButtonIndex.DriverRight;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+//import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.generated.TunerConstants;
@@ -100,19 +103,43 @@ public class RobotContainer {
     configureElevatorBindings();
   }
 
+  // check for precision or turbo mode
+  private double getSpeedFactor() {
+    double speedFactor = 1;
+    boolean turbo = false;
+    boolean precision = false;
+    if (driverRightStick.getRawButton(DriverRight.PRECISION_MODE_BUTTON)) {
+      precision = true;
+      speedFactor =  Settings.getSwervePrecisionFactor();
+    } else if (!driverLeftStick.getRawButton(DriverLeft.TURBO_MODE_BUTTON)) {
+      turbo = true;
+      speedFactor = Settings.getSwerveSpeedFactor();
+    } 
+    SmartDashboard.putBoolean("Precision", precision);
+    SmartDashboard.putBoolean("Turbo", turbo);
+    return MaxSpeed * speedFactor;
+  }
+
   private void configureSwerveBindings() {
+      
+      double speedFactor = getSpeedFactor();
       drivetrain.setDefaultCommand(
           drivetrain.applyRequest(() ->
-              drive.withVelocityX(-driverLeftStick.getY() * MaxSpeed) // Drive forward with negative Y (forward)
-                  .withVelocityY(-driverLeftStick.getX() * MaxSpeed) // Drive left with negative X (left)
-                  .withRotationalRate(-driverRightStick.getZ() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+              drive.withVelocityX(-driverLeftStick.getX() * speedFactor) 
+                  .withVelocityY(-driverLeftStick.getY() * speedFactor) 
+                  .withRotationalRate(-driverRightStick.getZ() * speedFactor) 
           )
       );
-      final var idle = new SwerveRequest.Idle();
-      RobotModeTriggers.disabled().whileTrue(
-          drivetrain.applyRequest(() -> idle).ignoringDisable(true)
-      );
+
+      // final var idle = new SwerveRequest.Idle();
+      // RobotModeTriggers.disabled().whileTrue(
+      //     drivetrain.applyRequest(() -> idle).ignoringDisable(true)
+      // );
+
       drivetrain.registerTelemetry(logger::telemeterize);
+
+      // pigeon reset
+      new JoystickButton(driverLeftStick, 4).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
   }
 
   private void configureAlgaeBindings() {
@@ -156,7 +183,8 @@ public class RobotContainer {
   private void configureClimberBindings() {
 
     // manual door movement
-    climberSub.setDefaultCommand(new ClimbMoveCommand(climberSub, () -> operatorRightStick.getX()));
+    climberSub.setDefaultCommand(new ClimbMoveCommand(climberSub, () -> operatorRightStick.getX(),
+        () -> operatorRightStick.getRawButton(ButtonIndex.OperatorRight.OVERRIDE_BUTTON)));
     
     // open door
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.DOOR_OPEN_BUTTON)
