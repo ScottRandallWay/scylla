@@ -14,9 +14,9 @@ import frc.robot.Constants.ButtonIndex;
 import frc.robot.commands.AlgaeEjectCommand;
 import frc.robot.commands.AlgaeGrabCommand;
 import frc.robot.commands.AlgaeToggleCommand;
-import frc.robot.commands.ClimbSetCommand;
 import frc.robot.commands.ClimbMoveCommand;
 import frc.robot.commands.CoralSetCommand;
+import frc.robot.commands.CoralShootCommand;
 import frc.robot.commands.ElevatorGoCommand;
 import frc.robot.commands.ElevatorMoveCommand;
 import frc.robot.commands.ElevatorSetCommand;
@@ -33,7 +33,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-//import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.generated.TunerConstants;
@@ -56,6 +56,7 @@ public class RobotContainer {
   private double MaxSpeed;
   private double MaxAngularRate;
   private final SwerveRequest.FieldCentric drive;
+  private final SwerveRequest.RobotCentric strafe;
   private final SwerveRequest.SwerveDriveBrake brake;
   private final SwerveRequest.PointWheelsAt point;
   private final Telemetry logger;
@@ -63,12 +64,14 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    // swerve systems
+    // swerve system
     MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
     drive = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
+    strafe = new SwerveRequest.RobotCentric()
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     brake = new SwerveRequest.SwerveDriveBrake();
     point = new SwerveRequest.PointWheelsAt();
     logger = new Telemetry(MaxSpeed);
@@ -101,6 +104,7 @@ public class RobotContainer {
     configureLedBindings();
     configureClimberBindings();
     configureElevatorBindings();
+    configureCoralBindings();
   }
 
   // check for precision or turbo mode
@@ -125,21 +129,33 @@ public class RobotContainer {
       double speedFactor = getSpeedFactor();
       drivetrain.setDefaultCommand(
           drivetrain.applyRequest(() ->
-              drive.withVelocityX(-driverLeftStick.getX() * speedFactor) 
-                  .withVelocityY(-driverLeftStick.getY() * speedFactor) 
-                  .withRotationalRate(-driverRightStick.getZ() * speedFactor) 
+              drive
+                .withVelocityX(-driverLeftStick.getY() * speedFactor) 
+                .withVelocityY(-driverLeftStick.getX() * speedFactor) 
+                .withRotationalRate(-driverRightStick.getZ() * speedFactor) 
           )
       );
 
-      // final var idle = new SwerveRequest.Idle();
-      // RobotModeTriggers.disabled().whileTrue(
-      //     drivetrain.applyRequest(() -> idle).ignoringDisable(true)
-      // );
-
+      final var idle = new SwerveRequest.Idle();
+      RobotModeTriggers.disabled().whileTrue(
+          drivetrain.applyRequest(() -> idle).ignoringDisable(true)
+      );
       drivetrain.registerTelemetry(logger::telemeterize);
 
       // pigeon reset
-      new JoystickButton(driverLeftStick, 4).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+      new JoystickButton(driverRightStick, 4).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+      // strafe left
+      new JoystickButton(driverLeftStick, 3).whileTrue(drivetrain.applyRequest(() -> strafe
+        .withVelocityX(0)
+        .withVelocityY(0.1)
+        .withRotationalRate(0)));
+
+      // strafe right
+      new JoystickButton(driverLeftStick, 4).whileTrue(drivetrain.applyRequest(() -> strafe
+        .withVelocityX(0)
+        .withVelocityY(-0.1)
+        .withRotationalRate(0)));
   }
 
   private void configureAlgaeBindings() {
@@ -185,15 +201,21 @@ public class RobotContainer {
     // manual door movement
     climberSub.setDefaultCommand(new ClimbMoveCommand(climberSub, () -> operatorRightStick.getX(),
         () -> operatorRightStick.getRawButton(ButtonIndex.OperatorRight.OVERRIDE_BUTTON)));
-    
-    // open door
-    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.DOOR_OPEN_BUTTON)
-      .onTrue(new ClimbSetCommand(climberSub, false));
-    
-    // close door
+            
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.DOOR_CLOSE_BUTTON)
-      .onTrue(new ClimbSetCommand(climberSub, true));
-    
+      .onTrue(Commands.sequence(
+        new ElevatorSetCommand(elevatorSub, 4),
+        new CoralShootCommand(coralSub),
+        new ElevatorSetCommand(elevatorSub, 7)
+      ));
+
+    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.DOOR_OPEN_BUTTON)
+      .onTrue(Commands.sequence(
+        new ElevatorSetCommand(elevatorSub, 3),
+        new CoralShootCommand(coralSub),
+        new ElevatorSetCommand(elevatorSub, 7)
+      ));      
+
     // lower piston
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.CLIMB_UP_BUTTON)
       .onTrue(new RunCommand(() -> climberSub.Lower(), climberSub));
@@ -243,6 +265,10 @@ public class RobotContainer {
     // reset position  
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ELEVATOR_RESET_BUTTON)
       .onTrue(new RunCommand(() -> elevatorSub.ResetPositoion(), elevatorSub));
+    
+  }
+
+  private void configureCoralBindings() {
 
     // pull coral in
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.CORAL_IN_BUTTON)
@@ -251,6 +277,7 @@ public class RobotContainer {
     // eject coral
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.CORAL_OUT_BUTTON)
       .whileTrue(new CoralSetCommand(coralSub, true));
+
   }
 
   // public Command getAutonomousCommand() {
