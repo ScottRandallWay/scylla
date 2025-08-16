@@ -34,7 +34,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -138,15 +137,16 @@ public class RobotContainer {
       new JoystickButton(driverRightStick, 4).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
       // strafe right
+      double strafeSpeed = Settings.getSwerveStrafeSpeed();
       new JoystickButton(driverLeftStick, 4).whileTrue(drivetrain.applyRequest(() -> strafe
         .withVelocityY(0)
-        .withVelocityX(0.25)
+        .withVelocityX(strafeSpeed)
         .withRotationalRate(0)));
 
       // strafe left
       new JoystickButton(driverLeftStick, 3).whileTrue(drivetrain.applyRequest(() -> strafe
         .withVelocityY(0)
-        .withVelocityX(-0.25)
+        .withVelocityX(strafeSpeed * -1)
         .withRotationalRate(0)));
   }
 
