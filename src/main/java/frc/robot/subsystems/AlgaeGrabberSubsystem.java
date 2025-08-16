@@ -39,7 +39,6 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
 
   public double getSensorVoltage() {
     double sensorVoltage = sensor.getVoltage();
-    //SmartDashboard.putNumber(Dashboard.Keys.ALGAE_VOLT_KEY, sensorVoltage);
     return sensorVoltage;  
   }
 

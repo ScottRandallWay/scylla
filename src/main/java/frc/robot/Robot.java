@@ -1,8 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -12,17 +10,9 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   
   private final RobotContainer m_robotContainer;
-  private final SendableChooser<String> m_chooser;
 
   public Robot() {    
     m_robotContainer = new RobotContainer();
-
-    // create autonomouse choices
-    m_chooser = new SendableChooser<>();
-    m_chooser.setDefaultOption("Center", "Center");
-    m_chooser.addOption("Left", "Left");
-    m_chooser.addOption("Right", "Right");
-    SmartDashboard.putData("Autonomous", m_chooser);
   }
 
   /**
