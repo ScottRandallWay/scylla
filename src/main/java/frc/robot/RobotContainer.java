@@ -57,8 +57,8 @@ public class RobotContainer {
   private double MaxAngularRate;
   private final SwerveRequest.FieldCentric drive;
   private final SwerveRequest.RobotCentric strafe;
-  private final SwerveRequest.SwerveDriveBrake brake;
-  private final SwerveRequest.PointWheelsAt point;
+  // private final SwerveRequest.SwerveDriveBrake brake;
+  // private final SwerveRequest.PointWheelsAt point;
   private final Telemetry logger;
   public final CommandSwerveDrivetrain drivetrain;
 
@@ -72,8 +72,8 @@ public class RobotContainer {
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
     strafe = new SwerveRequest.RobotCentric()
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-    brake = new SwerveRequest.SwerveDriveBrake();
-    point = new SwerveRequest.PointWheelsAt();
+    // brake = new SwerveRequest.SwerveDriveBrake();
+    // point = new SwerveRequest.PointWheelsAt();
     logger = new Telemetry(MaxSpeed);
     drivetrain = TunerConstants.createDrivetrain();
 
@@ -110,32 +110,25 @@ public class RobotContainer {
   // check for precision or turbo mode
   private double getSpeedFactor() {
     double speedFactor = 1;
-    boolean turbo = false;
-    boolean precision = false;
     if (driverRightStick.getRawButton(DriverRight.PRECISION_MODE_BUTTON)) {
-      precision = true;
       speedFactor =  Settings.getSwervePrecisionFactor();
     } else if (!driverLeftStick.getRawButton(DriverLeft.TURBO_MODE_BUTTON)) {
-      turbo = true;
       speedFactor = Settings.getSwerveSpeedFactor();
     } 
-    SmartDashboard.putBoolean("Precision", precision);
-    SmartDashboard.putBoolean("Turbo", turbo);
     return MaxSpeed * speedFactor;
   }
 
   private void configureSwerveBindings() {
       
-      double speedFactor = getSpeedFactor();
-      drivetrain.setDefaultCommand(
+    // drive system  
+    drivetrain.setDefaultCommand(
           drivetrain.applyRequest(() ->
               drive
-                .withVelocityX(-driverLeftStick.getY() * speedFactor) 
-                .withVelocityY(-driverLeftStick.getX() * speedFactor) 
-                .withRotationalRate(-driverRightStick.getZ() * speedFactor) 
+                .withVelocityX(-driverLeftStick.getY() * getSpeedFactor()) 
+                .withVelocityY(-driverLeftStick.getX() * getSpeedFactor()) 
+                .withRotationalRate(-driverRightStick.getZ() * getSpeedFactor()) 
           )
       );
-
       final var idle = new SwerveRequest.Idle();
       RobotModeTriggers.disabled().whileTrue(
           drivetrain.applyRequest(() -> idle).ignoringDisable(true)
@@ -145,16 +138,16 @@ public class RobotContainer {
       // pigeon reset
       new JoystickButton(driverRightStick, 4).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-      // strafe left
-      new JoystickButton(driverLeftStick, 3).whileTrue(drivetrain.applyRequest(() -> strafe
-        .withVelocityX(0)
-        .withVelocityY(0.1)
-        .withRotationalRate(0)));
-
       // strafe right
       new JoystickButton(driverLeftStick, 4).whileTrue(drivetrain.applyRequest(() -> strafe
-        .withVelocityX(0)
-        .withVelocityY(-0.1)
+        .withVelocityY(0)
+        .withVelocityX(0.25)
+        .withRotationalRate(0)));
+
+      // strafe left
+      new JoystickButton(driverLeftStick, 3).whileTrue(drivetrain.applyRequest(() -> strafe
+        .withVelocityY(0)
+        .withVelocityX(-0.25)
         .withRotationalRate(0)));
   }
 
@@ -201,20 +194,6 @@ public class RobotContainer {
     // manual door movement
     climberSub.setDefaultCommand(new ClimbMoveCommand(climberSub, () -> operatorRightStick.getX(),
         () -> operatorRightStick.getRawButton(ButtonIndex.OperatorRight.OVERRIDE_BUTTON)));
-            
-    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.DOOR_CLOSE_BUTTON)
-      .onTrue(Commands.sequence(
-        new ElevatorSetCommand(elevatorSub, 4),
-        new CoralShootCommand(coralSub),
-        new ElevatorSetCommand(elevatorSub, 7)
-      ));
-
-    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.DOOR_OPEN_BUTTON)
-      .onTrue(Commands.sequence(
-        new ElevatorSetCommand(elevatorSub, 3),
-        new CoralShootCommand(coralSub),
-        new ElevatorSetCommand(elevatorSub, 7)
-      ));      
 
     // lower piston
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.CLIMB_UP_BUTTON)
@@ -223,6 +202,7 @@ public class RobotContainer {
     // raise piston
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.CLIMB_DOWN_BUTTON)
       .onTrue(new RunCommand(() -> climberSub.Raise(), climberSub));
+
   }
 
   private void configureElevatorBindings(){
@@ -259,8 +239,25 @@ public class RobotContainer {
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ALGAE_LOW_BUTTON)
       .onTrue(new ElevatorSetCommand(elevatorSub, 6));      
 
+    // home travel position
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.HOME_TRAVEL_BUTTON)
       .onTrue(new ElevatorSetCommand(elevatorSub, 7));
+
+    // score level 3
+    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.SCORE_LVL3_BUTTON)
+      .onTrue(Commands.sequence(
+        new ElevatorSetCommand(elevatorSub, 3),
+        new CoralShootCommand(coralSub),
+        new ElevatorSetCommand(elevatorSub, 7)
+      )); 
+         
+    // score level 4
+    new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.SCORE_LVL4_BUTTON)
+      .onTrue(Commands.sequence(
+        new ElevatorSetCommand(elevatorSub, 4),
+        new CoralShootCommand(coralSub),
+        new ElevatorSetCommand(elevatorSub, 7)
+      ));
 
     // reset position  
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ELEVATOR_RESET_BUTTON)
