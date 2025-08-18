@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.configs.*;
@@ -8,6 +11,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import frc.robot.Dashboard;
 import frc.robot.Constants.DashboardKeys;
 import frc.robot.Constants.MotorPorts;
 
@@ -15,12 +20,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   private TalonFX talon;
   private final MotionMagicVoltage motionMagicRequest;
+  private GenericEntry elevatorEntry;
   
   public ElevatorSubsystem() {
     talon = new TalonFX(MotorPorts.ELEVATOR_MOTOR);
     motionMagicRequest = new MotionMagicVoltage(0);
     SetConfiguration();
-    ResetPositoion();  
+    ResetPosition();  
+    elevatorEntry = Dashboard.getElevatorEntry();
   }
     
   public void SetSpeed(double speed) {   
@@ -30,11 +37,11 @@ public class ElevatorSubsystem extends SubsystemBase {
   public double GetPostion() {
     var signal = talon.getPosition();
     double position = signal.getValueAsDouble();
-    SmartDashboard.putNumber(DashboardKeys.ELEVATOR_POSITION, position);
+    elevatorEntry.setDouble(position);
     return position;
   }
 
-  public void ResetPositoion() {
+  public void ResetPosition() {
     talon.setPosition(0.0);
     SmartDashboard.putNumber(DashboardKeys.ELEVATOR_POSITION, 0.0);
   }

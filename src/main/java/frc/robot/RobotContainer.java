@@ -66,7 +66,7 @@ public class RobotContainer {
     MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
     drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) 
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
     strafe = new SwerveRequest.RobotCentric()
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -260,7 +260,7 @@ public class RobotContainer {
 
     // reset position  
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ELEVATOR_RESET_BUTTON)
-      .onTrue(new RunCommand(() -> elevatorSub.ResetPositoion(), elevatorSub));
+      .onTrue(new RunCommand(() -> elevatorSub.ResetPosition(), elevatorSub));
     
   }
 
