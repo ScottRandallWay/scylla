@@ -1,9 +1,11 @@
 package frc.robot;
 
-//import frc.robot.commands.Autos;
+import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import static edu.wpi.first.units.Units.*;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.FollowPathCommand;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
 import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -29,6 +31,10 @@ import frc.robot.Constants.ButtonIndex.DriverRight;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -55,25 +61,13 @@ public class RobotContainer {
   private double MaxAngularRate;
   private final SwerveRequest.FieldCentric drive;
   private final SwerveRequest.RobotCentric strafe;
-  // private final SwerveRequest.SwerveDriveBrake brake;
-  // private final SwerveRequest.PointWheelsAt point;
+  private final SwerveRequest.SwerveDriveBrake brake;
+  private final SwerveRequest.PointWheelsAt point;
   private final Telemetry logger;
   public final CommandSwerveDrivetrain drivetrain;
+  private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
-
-    // swerve system
-    MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-    drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) 
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
-    strafe = new SwerveRequest.RobotCentric()
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-    // brake = new SwerveRequest.SwerveDriveBrake();
-    // point = new SwerveRequest.PointWheelsAt();
-    logger = new Telemetry(MaxSpeed);
-    drivetrain = TunerConstants.createDrivetrain();
 
     // init pnuematics
     hub = new PneumaticHub(PnuematicChannels.PNEUMATIC_HUB_MODULE);
@@ -85,6 +79,28 @@ public class RobotContainer {
     ledSub = new LedSubsystem();
     elevatorSub = new ElevatorSubsystem();
     coralSub = new CoralSubsystem();
+
+    NamedCommands.registerCommand("tossCoral", new AlgaeToggleCommand(algaeGrabberSub, false));
+
+    // swerve system
+    MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    drive = new SwerveRequest.FieldCentric()
+      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) 
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
+    strafe = new SwerveRequest.RobotCentric()
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    brake = new SwerveRequest.SwerveDriveBrake();
+    point = new SwerveRequest.PointWheelsAt();
+    logger = new Telemetry(MaxSpeed);
+    drivetrain = TunerConstants.createDrivetrain();
+
+    // add autonomous selection to dashboard
+    autoChooser = AutoBuilder.buildAutoChooser("Auto Middle");
+    Shuffleboard.getTab(Dashboard.DRIVE_TAB)
+      .add("Auto Mode", autoChooser)
+      .withSize(2, 1)
+      .withPosition(1, 0);
 
     // init triggers
     startTeleopTrigger = new Trigger(DriverStation::isTeleopEnabled);
@@ -103,6 +119,9 @@ public class RobotContainer {
     configureClimberBindings();
     configureElevatorBindings();
     configureCoralBindings();
+
+    // Warmup PathPlanner to avoid Java pauses
+    FollowPathCommand.warmupCommand().schedule();
   }
 
   // check for precision or turbo mode
@@ -276,9 +295,7 @@ public class RobotContainer {
 
   }
 
-  // public Command getAutonomousCommand() {
-  //   // An example command will be run in autonomous
-
-  //   // return Autos.exampleAuto(m_exampleSubsystem);
-  // }
+  public Command getAutonomousCommand() {
+    return autoChooser.getSelected();
+  }
 }

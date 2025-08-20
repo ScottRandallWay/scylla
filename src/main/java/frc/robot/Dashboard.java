@@ -1,23 +1,14 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public final class Dashboard {
 
   public static final String DRIVE_TAB = "Scylla";
   public static final String SETTINGS_TAB = "Preferences";
   
-  public static void init() {
-    // Shuffleboard.getTab(SETTINGS_TAB)
-    //   .add("Preferences", true)
-    //   .withWidget(BuiltInWidgets.)
-    //   .withSize(2, 6)
-    //   .withPosition(0,0);
-
-  }
-
   public static GenericEntry getElevatorEntry() {
     return Shuffleboard.getTab(DRIVE_TAB)
       .add("Elevator Position", 0)
