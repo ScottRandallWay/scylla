@@ -64,7 +64,7 @@ public class Settings {
   private static final double ELEVATOR_GRAVITY_FACTOR_DEFAULT = -0.75;
   private static final double SWERVE_SPEED_FACTOR_DEFAULT = 0.5;
   private static final double SWERVE_PRECISION_FACTOR_DEFAULT = 0.15;
-  private static final double SWERVE_STRAFE_SPEED_DEFAULT = 0.25;
+  private static final double SWERVE_STRAFE_SPEED_DEFAULT = 0.6;
 
   public static final void Init() {
       if (!Preferences.containsKey(ALGAE_DETECT_VOLT)) {

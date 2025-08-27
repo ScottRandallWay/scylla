@@ -86,7 +86,7 @@ public class RobotContainer {
     MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
     drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) 
+      .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05) 
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
     strafe = new SwerveRequest.RobotCentric()
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -159,13 +159,13 @@ public class RobotContainer {
       double strafeSpeed = Settings.getSwerveStrafeSpeed();
       new JoystickButton(driverLeftStick, 4).whileTrue(drivetrain.applyRequest(() -> strafe
         .withVelocityY(0)
-        .withVelocityX(strafeSpeed)
+        .withVelocityX(0.8)
         .withRotationalRate(0)));
 
       // strafe left
       new JoystickButton(driverLeftStick, 3).whileTrue(drivetrain.applyRequest(() -> strafe
         .withVelocityY(0)
-        .withVelocityX(strafeSpeed * -1)
+        .withVelocityX(0.8 * -1)
         .withRotationalRate(0)));
   }
 
