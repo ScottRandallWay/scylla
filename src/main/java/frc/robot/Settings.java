@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Preferences;
+import frc.robot.Constants.ElevatorLevels;
 
 public class Settings {
 
@@ -64,7 +65,7 @@ public class Settings {
   private static final double ELEVATOR_GRAVITY_FACTOR_DEFAULT = -0.75;
   private static final double SWERVE_SPEED_FACTOR_DEFAULT = 0.5;
   private static final double SWERVE_PRECISION_FACTOR_DEFAULT = 0.15;
-  private static final double SWERVE_STRAFE_SPEED_DEFAULT = 0.6;
+  private static final double SWERVE_STRAFE_SPEED_DEFAULT = 0.4;
 
   public static final void Init() {
       if (!Preferences.containsKey(ALGAE_DETECT_VOLT)) {
@@ -277,19 +278,19 @@ public class Settings {
     
     public static double getElevatorSetpoint(int level) {
       switch(level) {
-        case 1:
+        case ElevatorLevels.LEVEL1:
           return Preferences.getDouble(ELEVATOR_LEVEL1_SETPOINT, ELEVATOR_LEVEL1_SETPOINT_DEFAULT);
-        case 2:
+        case ElevatorLevels.LEVEL2:
           return Preferences.getDouble(ELEVATOR_LEVEL2_SETPOINT, ELEVATOR_LEVEL2_SETPOINT_DEFAULT);
-        case 3:
+        case ElevatorLevels.LEVEL3:
           return Preferences.getDouble(ELEVATOR_LEVEL3_SETPOINT, ELEVATOR_LEVEL3_SETPOINT_DEFAULT);
-        case 4: 
+        case ElevatorLevels.LEVEL4: 
           return Preferences.getDouble(ELEVATOR_LEVEL4_SETPOINT, ELEVATOR_LEVEL4_SETPOINT_DEFAULT);
-        case 5:
+        case ElevatorLevels.HIGH_ALGAE:
           return Preferences.getDouble(ELEVATOR_ALGAE_HIGH_SETPOINT, ELEVATOR_ALGAE_HIGH_SETPOINT_DEFAULT);
-        case 6:
+        case ElevatorLevels.LOW_ALGAE:
           return Preferences.getDouble(ELEVATOR_ALGAE_LOW_SETPOINT, ELEVATOR_ALGAE_LOW_SETPOINT_DEFAULT);
-        case 7:
+        case ElevatorLevels.HOME_TRAVEL:
           return Preferences.getDouble(ELEVATOR_HOME_TRAVEL_POSITION, ELEVATOR_HOME_TRAVEL_POSITION_DEFAULT);           
         default:
           return 0;

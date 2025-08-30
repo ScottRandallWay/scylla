@@ -80,9 +80,6 @@ public class ElevatorSetCommand extends Command {
       speed = (Math.abs(startError) * accel) + lowSpeed;
     }
 
-    System.out.println("speed: " + speed);
-    System.out.println("error: " + error);
-
     // set motor direction
     if (error > 0) {
       elevatorSub.SetSpeed(speed);

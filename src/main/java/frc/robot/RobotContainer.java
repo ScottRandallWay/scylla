@@ -13,6 +13,7 @@ import frc.robot.subsystems.CoralSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.Constants.JoystickChannels;
 import frc.robot.Constants.ButtonIndex;
+import frc.robot.Constants.ElevatorLevels;
 import frc.robot.commands.AlgaeEjectCommand;
 import frc.robot.commands.AlgaeGrabCommand;
 import frc.robot.commands.AlgaeToggleCommand;
@@ -80,7 +81,13 @@ public class RobotContainer {
     elevatorSub = new ElevatorSubsystem();
     coralSub = new CoralSubsystem();
 
-    NamedCommands.registerCommand("tossCoral", new AlgaeToggleCommand(algaeGrabberSub, false));
+    // named commands for path planner
+    NamedCommands.registerCommand("homeElevator", new ElevatorSetCommand(elevatorSub, 7));
+    NamedCommands.registerCommand("tossCoral", 
+      Commands.sequence(
+        new AlgaeToggleCommand(algaeGrabberSub, false),
+        new AlgaeToggleCommand(algaeGrabberSub, true)
+      ));
 
     // swerve system
     MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -156,16 +163,15 @@ public class RobotContainer {
       new JoystickButton(driverRightStick, 4).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
       // strafe right
-      double strafeSpeed = Settings.getSwerveStrafeSpeed();
       new JoystickButton(driverLeftStick, 4).whileTrue(drivetrain.applyRequest(() -> strafe
         .withVelocityY(0)
-        .withVelocityX(0.8)
+        .withVelocityX(Settings.getSwerveStrafeSpeed())
         .withRotationalRate(0)));
 
       // strafe left
       new JoystickButton(driverLeftStick, 3).whileTrue(drivetrain.applyRequest(() -> strafe
         .withVelocityY(0)
-        .withVelocityX(0.8 * -1)
+        .withVelocityX(Settings.getSwerveStrafeSpeed() * -1)
         .withRotationalRate(0)));
   }
 
@@ -235,46 +241,46 @@ public class RobotContainer {
 
     // PID level 3
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ELEVATOR_LEVEL1)
-      .onTrue(new ElevatorGoCommand(elevatorSub, 3));
+      .onTrue(new ElevatorGoCommand(elevatorSub, ElevatorLevels.LEVEL1));
     
     // level 2
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ELEVATOR_LEVEL2)
-      .onTrue(new ElevatorSetCommand(elevatorSub, 2));
+      .onTrue(new ElevatorSetCommand(elevatorSub, ElevatorLevels.LEVEL2));
 
     // level 3  
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ELEVATOR_LEVEL3)
-      .onTrue(new ElevatorSetCommand(elevatorSub, 3));
+      .onTrue(new ElevatorSetCommand(elevatorSub, ElevatorLevels.LEVEL3));
 
     // level 4
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ELEVATOR_LEVEL4)
-      .onTrue(new ElevatorSetCommand(elevatorSub, 4));
+      .onTrue(new ElevatorSetCommand(elevatorSub, ElevatorLevels.LEVEL4));
 
     // algae high  
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.ALGAE_HIGH_BUTTON)
-      .onTrue(new ElevatorSetCommand(elevatorSub, 5));  
+      .onTrue(new ElevatorSetCommand(elevatorSub, ElevatorLevels.HIGH_ALGAE));  
 
     // algae low  
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ALGAE_LOW_BUTTON)
-      .onTrue(new ElevatorSetCommand(elevatorSub, 6));      
+      .onTrue(new ElevatorSetCommand(elevatorSub, ElevatorLevels.LOW_ALGAE));      
 
     // home travel position
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.HOME_TRAVEL_BUTTON)
-      .onTrue(new ElevatorSetCommand(elevatorSub, 7));
+      .onTrue(new ElevatorSetCommand(elevatorSub, ElevatorLevels.HOME_TRAVEL));
 
     // score level 3
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.SCORE_LVL3_BUTTON)
       .onTrue(Commands.sequence(
-        new ElevatorSetCommand(elevatorSub, 3),
+        new ElevatorSetCommand(elevatorSub, ElevatorLevels.LEVEL3),
         new CoralShootCommand(coralSub),
-        new ElevatorSetCommand(elevatorSub, 7)
+        new ElevatorSetCommand(elevatorSub, ElevatorLevels.HOME_TRAVEL)
       )); 
          
     // score level 4
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.SCORE_LVL4_BUTTON)
       .onTrue(Commands.sequence(
-        new ElevatorSetCommand(elevatorSub, 4),
+        new ElevatorSetCommand(elevatorSub, ElevatorLevels.LEVEL4),
         new CoralShootCommand(coralSub),
-        new ElevatorSetCommand(elevatorSub, 7)
+        new ElevatorSetCommand(elevatorSub, ElevatorLevels.HOME_TRAVEL)
       ));
 
     // reset position  

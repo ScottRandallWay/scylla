@@ -17,15 +17,21 @@
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 0.0
+            "pathName": "Right Feeder"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "tossCoral"
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Reef"
           }
         }
       ]

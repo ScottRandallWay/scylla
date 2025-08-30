@@ -6,6 +6,16 @@ public final class Constants {
     public static final String DOOR_POSITION = "Door Position";
     public static final String ELEVATOR_POSITION = "Elevator Position";
   }
+
+  public static final class ElevatorLevels {
+    public static final int LEVEL1 = 1;
+    public static final int LEVEL2 = 2;
+    public static final int LEVEL3 = 3;
+    public static final int LEVEL4 = 4;
+    public static final int HIGH_ALGAE = 5;
+    public static final int LOW_ALGAE = 6;
+    public static final int HOME_TRAVEL = 7;
+  }
   
   public static final class JoystickChannels {
     public static final int OPERATOR_RIGHT_JOYSTICK = 0;
