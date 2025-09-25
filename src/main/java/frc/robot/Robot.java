@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     Settings.Init();
-    Settings.Reset();
+    //Settings.Reset();
   }
 
   @Override

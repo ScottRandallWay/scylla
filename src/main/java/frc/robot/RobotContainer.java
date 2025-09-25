@@ -7,6 +7,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.CoralSubsystem;
@@ -17,6 +18,7 @@ import frc.robot.Constants.ElevatorLevels;
 import frc.robot.commands.AlgaeEjectCommand;
 import frc.robot.commands.AlgaeGrabCommand;
 import frc.robot.commands.AlgaeToggleCommand;
+import frc.robot.commands.CameraAimCommand;
 import frc.robot.commands.ClimbMoveCommand;
 import frc.robot.commands.CoralSetCommand;
 import frc.robot.commands.CoralShootCommand;
@@ -27,14 +29,11 @@ import frc.robot.commands.LedBallCommand;
 import frc.robot.commands.LedFlashCommand;
 import frc.robot.Constants.PnuematicChannels;
 import frc.robot.Constants.TimeConstants;
-import frc.robot.Constants.ButtonIndex.DriverLeft;
-import frc.robot.Constants.ButtonIndex.DriverRight;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -51,6 +50,7 @@ public class RobotContainer {
   private final LedSubsystem ledSub;
   private final ElevatorSubsystem elevatorSub;
   private final CoralSubsystem coralSub;
+  private final CameraSubsystem cameraSub;
   private final Joystick operatorLeftStick;
   private final Joystick operatorRightStick;
   private final Joystick driverLeftStick;
@@ -80,14 +80,12 @@ public class RobotContainer {
     ledSub = new LedSubsystem();
     elevatorSub = new ElevatorSubsystem();
     coralSub = new CoralSubsystem();
+    cameraSub = new CameraSubsystem();
 
     // named commands for path planner
     NamedCommands.registerCommand("homeElevator", new ElevatorSetCommand(elevatorSub, 7));
-    NamedCommands.registerCommand("tossCoral", 
-      Commands.sequence(
-        new AlgaeToggleCommand(algaeGrabberSub, false),
-        new AlgaeToggleCommand(algaeGrabberSub, true)
-      ));
+    NamedCommands.registerCommand("tossCoral", new AlgaeToggleCommand(algaeGrabberSub, false));
+    NamedCommands.registerCommand("raiseAlgae", new AlgaeToggleCommand(algaeGrabberSub, true));
 
     // swerve system
     MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -134,9 +132,9 @@ public class RobotContainer {
   // check for precision or turbo mode
   private double getSpeedFactor() {
     double speedFactor = 1;
-    if (driverRightStick.getRawButton(DriverRight.PRECISION_MODE_BUTTON)) {
+    if (driverRightStick.getRawButton(ButtonIndex.DriverRight.PRECISION_MODE_BUTTON)) {
       speedFactor =  Settings.getSwervePrecisionFactor();
-    } else if (!driverLeftStick.getRawButton(DriverLeft.TURBO_MODE_BUTTON)) {
+    } else if (!driverLeftStick.getRawButton(ButtonIndex.DriverLeft.TURBO_MODE_BUTTON)) {
       speedFactor = Settings.getSwerveSpeedFactor();
     } 
     return MaxSpeed * speedFactor;
@@ -160,16 +158,23 @@ public class RobotContainer {
       drivetrain.registerTelemetry(logger::telemeterize);
 
       // pigeon reset
-      new JoystickButton(driverRightStick, 4).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+      new JoystickButton(driverRightStick, ButtonIndex.DriverRight.RESET_PIGEON_BUTTON)
+        .onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
+      // track april tag
+      new JoystickButton(driverLeftStick, 0)
+        .whileTrue(new CameraAimCommand(cameraSub, MaxSpeed, -0.1, 0.005, MaxAngularRate));
+      
       // strafe right
-      new JoystickButton(driverLeftStick, 4).whileTrue(drivetrain.applyRequest(() -> strafe
+      new JoystickButton(driverLeftStick, ButtonIndex.DriverLeft.STRAFE_RIGHT_BUTTON)
+        .whileTrue(drivetrain.applyRequest(() -> strafe
         .withVelocityY(0)
         .withVelocityX(Settings.getSwerveStrafeSpeed())
         .withRotationalRate(0)));
 
       // strafe left
-      new JoystickButton(driverLeftStick, 3).whileTrue(drivetrain.applyRequest(() -> strafe
+      new JoystickButton(driverLeftStick, ButtonIndex.DriverLeft.STRAFE_LEFT_BUTTON)
+        .whileTrue(drivetrain.applyRequest(() -> strafe
         .withVelocityY(0)
         .withVelocityX(Settings.getSwerveStrafeSpeed() * -1)
         .withRotationalRate(0)));

@@ -25,12 +25,19 @@ public final class Constants {
   }
 
   public static final class ButtonIndex {
+
     public static final class DriverRight {
       public static final int PRECISION_MODE_BUTTON = 1;
+      public static final int RESET_PIGEON_BUTTON = 4;
+      
     }
+
     public static final class DriverLeft {
       public static final int TURBO_MODE_BUTTON = 1;
+      public static final int STRAFE_LEFT_BUTTON = 3;
+      public static final int STRAFE_RIGHT_BUTTON = 4;
     }
+
     public static final class OperatorRight {
       public static final int CORAL_IN_BUTTON = 1;
       public static final int CORAL_OUT_BUTTON = 2;
@@ -43,6 +50,7 @@ public final class Constants {
       public static final int OVERRIDE_BUTTON = 9;
       public static final int ELEVATOR_RESET_BUTTON = 10;
     }
+
     public static final class OperatorLeft {
       public static final int HOME_TRAVEL_BUTTON = 1;
       public static final int ALGAE_HIGH_BUTTON = 2;
