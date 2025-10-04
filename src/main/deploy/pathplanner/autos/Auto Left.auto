@@ -9,6 +9,24 @@
           "data": {
             "pathName": "Left"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "tossCoral"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "raiseAlgae"
+          }
         }
       ]
     }
