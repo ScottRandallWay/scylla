@@ -58,7 +58,7 @@ public class Settings {
   private static final double ELEVATOR_LEVEL1_SETPOINT_DEFAULT = 10;
   private static final double ELEVATOR_LEVEL2_SETPOINT_DEFAULT = 26;
   private static final double ELEVATOR_LEVEL3_SETPOINT_DEFAULT = 46;
-  private static final double ELEVATOR_LEVEL4_SETPOINT_DEFAULT = 75;
+  private static final double ELEVATOR_LEVEL4_SETPOINT_DEFAULT = 80;
   private static final double ELEVATOR_ALGAE_HIGH_SETPOINT_DEFAULT = 50;
   private static final double ELEVATOR_ALGAE_LOW_SETPOINT_DEFAULT = 32;
   private static final double ELEVATOR_HOME_TRAVEL_POSITION_DEFAULT = 10;

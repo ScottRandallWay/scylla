@@ -21,6 +21,7 @@ public class AlgaeGrabberSubsystem extends SubsystemBase {
   private AnalogInput sensor;
   private double algaeDetectThreshold;
   private GenericEntry sensorEntry;
+
   
   public AlgaeGrabberSubsystem(PneumaticHub hub) {
     algaeDetectThreshold = Settings.getAlgaeDetectThreshold();

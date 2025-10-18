@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import frc.robot.Settings;
 import frc.robot.subsystems.AlgaeGrabberSubsystem;
+import frc.robot.subsystems.LedSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class AlgaeGrabCommand extends Command {
@@ -9,11 +10,14 @@ public class AlgaeGrabCommand extends Command {
   private final AlgaeGrabberSubsystem algaeGrabberSub;
   private double motorSpeed;
   private double holdSpeed;
+  private LedSubsystem ledSubsystem;
 
-  public AlgaeGrabCommand(AlgaeGrabberSubsystem subsystem) {
-    this.algaeGrabberSub = subsystem;
-    addRequirements(subsystem);
+  public AlgaeGrabCommand(AlgaeGrabberSubsystem algeaSubsystem, LedSubsystem ledSubsystem) {
+    this.algaeGrabberSub = algeaSubsystem;
+    this.ledSubsystem = ledSubsystem;
+    addRequirements(algeaSubsystem, ledSubsystem);
   }
+
 
   @Override
   public void initialize() {
@@ -31,6 +35,7 @@ public class AlgaeGrabCommand extends Command {
   public void end(boolean interrupted) {
     this.algaeGrabberSub.setSpeed(holdSpeed);
     this.algaeGrabberSub.raise();
+    ledSubsystem.setColor(LedSubsystem.Color.GREEN);
   }
 
   @Override

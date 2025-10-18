@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Dashboard;
 import frc.robot.LimelightHelpers;
@@ -12,17 +15,25 @@ public class CameraSubsystem extends SubsystemBase {
   private GenericEntry tagAngle;
   private GenericEntry tagTx;
   private GenericEntry tagTy;
-  private final String LIMELIGHT_NAME = "limelight12";
+  private final String LIMELIGHT_NAME = "limelight-twelve";
 
   public CameraSubsystem() {
     tagEntry = Dashboard.getTagEntry();
     tagSpeed = Dashboard.getTagSpeedEntry();
-    tagAngle = Dashboard.getAlgaeEntry();
+    tagAngle = Dashboard.getTagAngleEntry();
     tagTx = Dashboard.getTagTxEntry();
     tagTy = Dashboard.getTagTyEntry();
   }
 
   public boolean hasTarget() {
+    System.out.println("running has Target");
+
+    // NetworkTable table = NetworkTableInstance.getDefault().getTable(LIMELIGHT_NAME);
+    // NetworkTableEntry entry = table.getEntry("tid");
+
+    // tagEntry.setDouble(entry.getDouble(0));
+    // return false;
+
     boolean hasTarget = LimelightHelpers.getTV(LIMELIGHT_NAME);
     if (hasTarget) {
       double id = LimelightHelpers.getFiducialID(LIMELIGHT_NAME);
@@ -45,7 +56,7 @@ public class CameraSubsystem extends SubsystemBase {
 
   public double getTx() {
     double x = LimelightHelpers.getTX(LIMELIGHT_NAME);
-    tagTy.setDouble(x);
+    tagTx.setDouble(x);
     return x;
   }
 

@@ -24,14 +24,15 @@ import frc.robot.commands.CoralSetCommand;
 import frc.robot.commands.CoralShootCommand;
 import frc.robot.commands.ElevatorGoCommand;
 import frc.robot.commands.ElevatorMoveCommand;
+import frc.robot.commands.ElevatorResetCommand;
 import frc.robot.commands.ElevatorSetCommand;
 import frc.robot.commands.LedBallCommand;
-import frc.robot.commands.LedFlashCommand;
 import frc.robot.Constants.PnuematicChannels;
 import frc.robot.Constants.TimeConstants;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,14 +51,15 @@ public class RobotContainer {
   private final LedSubsystem ledSub;
   private final ElevatorSubsystem elevatorSub;
   private final CoralSubsystem coralSub;
-  private final CameraSubsystem cameraSub;
+  //private final CameraSubsystem cameraSub;
   private final Joystick operatorLeftStick;
   private final Joystick operatorRightStick;
   private final Joystick driverLeftStick;
   private final Joystick driverRightStick;
   private final PneumaticHub hub;
+  private final Trigger robotAutonTrigger;
+  private final Trigger robotDisableTrigger;
   private final Trigger startTeleopTrigger;
-  private final Trigger endgameTrigger;
   private double MaxSpeed;
   private double MaxAngularRate;
   private final SwerveRequest.FieldCentric drive;
@@ -80,7 +82,7 @@ public class RobotContainer {
     ledSub = new LedSubsystem();
     elevatorSub = new ElevatorSubsystem();
     coralSub = new CoralSubsystem();
-    cameraSub = new CameraSubsystem();
+    //cameraSub = new CameraSubsystem();
 
     // named commands for path planner
     NamedCommands.registerCommand("homeElevator", new ElevatorSetCommand(elevatorSub, 7));
@@ -108,9 +110,10 @@ public class RobotContainer {
       .withPosition(1, 0);
 
     // init triggers
-    startTeleopTrigger = new Trigger(DriverStation::isTeleopEnabled);
-    endgameTrigger = new Trigger(DriverStation::isTeleopEnabled);
-
+    robotAutonTrigger = new Trigger(RobotModeTriggers.autonomous());
+    robotDisableTrigger = new Trigger(RobotModeTriggers.disabled());
+    startTeleopTrigger = new Trigger(DriverStation::isTeleop);
+    
     // initi create joysticks
     operatorLeftStick = new Joystick(JoystickChannels.OPERATOR_LEFT_JOYSTICK);
     operatorRightStick = new Joystick(JoystickChannels.OPERATOR_RIGHT_JOYSTICK);
@@ -160,11 +163,7 @@ public class RobotContainer {
       // pigeon reset
       new JoystickButton(driverRightStick, ButtonIndex.DriverRight.RESET_PIGEON_BUTTON)
         .onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-
-      // track april tag
-      new JoystickButton(driverLeftStick, 0)
-        .whileTrue(new CameraAimCommand(cameraSub, MaxSpeed, -0.1, 0.005, MaxAngularRate));
-      
+            
       // strafe right
       new JoystickButton(driverLeftStick, ButtonIndex.DriverLeft.STRAFE_RIGHT_BUTTON)
         .whileTrue(drivetrain.applyRequest(() -> strafe
@@ -184,12 +183,12 @@ public class RobotContainer {
     
     // grab algae
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ALGAE_GRAB_BUTTON)
-      .onTrue(
-        Commands.sequence(
-          new AlgaeGrabCommand(algaeGrabberSub), 
-          new LedBallCommand(ledSub, algaeGrabberSub)
-        )
-      );
+      .onTrue(new AlgaeGrabCommand(algaeGrabberSub, ledSub)        
+    );
+
+    // // track april tag
+    // new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ALGAE_GRAB_BUTTON)
+    //   .whileTrue(new CameraAimCommand(cameraSub, MaxSpeed, -0.1, 0.005, MaxAngularRate));  
 
     // eject algae
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ALGAE_SET_BUTTON)
@@ -210,11 +209,23 @@ public class RobotContainer {
   }
 
   private void configureLedBindings() {
-
-    // make lights flash during end game
+    
+    robotAutonTrigger.onTrue(Commands.sequence(
+      ledSub.runOnce(() -> ledSub.resetColor()),
+      ledSub.runOnce(() -> ledSub.setFlashing(false))
+    ));
+      
+    robotDisableTrigger.onTrue(Commands.sequence(
+      ledSub.runOnce(() -> ledSub.setColor(LedSubsystem.Color.DEFAULT)).ignoringDisable(true),
+      ledSub.runOnce(() -> ledSub.setFlashing(false)).ignoringDisable(true)
+    ));
+    
     int seconds = TimeConstants.TELEOP_SECONDS - Settings.getEndGameSeconds();
-    endgameTrigger.onTrue(Commands.waitSeconds(seconds).andThen(new LedFlashCommand(ledSub, true)));
-    startTeleopTrigger.onTrue(new LedFlashCommand(ledSub, false));
+    startTeleopTrigger.onTrue(Commands.sequence(
+      ledSub.runOnce(() -> ledSub.resetColor()),
+      ledSub.runOnce(() -> ledSub.setFlashing(false)),
+      Commands.waitSeconds(seconds).andThen(ledSub.runOnce(() -> ledSub.setFlashing(true)))
+    ));
 
   }
 
@@ -231,7 +242,6 @@ public class RobotContainer {
     // raise piston
     new JoystickButton(operatorLeftStick, ButtonIndex.OperatorLeft.CLIMB_DOWN_BUTTON)
       .onTrue(new RunCommand(() -> climberSub.Raise(), climberSub));
-
   }
 
   private void configureElevatorBindings(){
@@ -290,7 +300,7 @@ public class RobotContainer {
 
     // reset position  
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ELEVATOR_RESET_BUTTON)
-      .onTrue(new RunCommand(() -> elevatorSub.ResetPosition(), elevatorSub));
+      .onTrue(new ElevatorResetCommand(elevatorSub));
     
   }
 

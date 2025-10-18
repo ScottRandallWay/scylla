@@ -41,7 +41,7 @@ public class ElevatorMoveCommand extends Command {
     boolean x = override.getAsBoolean();
     if (Math.abs(y) > deadZone) {
       if (y > 0) {
-        if (position >= 5 || x) {
+        if (position >= 0 || x) {
           elevatorSub.SetSpeed(motorSpeed * gravityFactor);
         } else {
           elevatorSub.SetSpeed(holdSpeed);

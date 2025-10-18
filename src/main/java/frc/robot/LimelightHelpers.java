@@ -1034,9 +1034,6 @@ public class LimelightHelpers {
     return 1.0 == getLimelightNTDouble(limelightName, "tv");
   }
 
-  /////
-  /////
-
   public static void setPipelineIndex(String limelightName, int pipelineIndex) {
     setLimelightNTDouble(limelightName, "pipeline", pipelineIndex);
   }

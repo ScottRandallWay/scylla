@@ -24,8 +24,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     talon = new TalonFX(MotorPorts.ELEVATOR_MOTOR);
     motionMagicRequest = new MotionMagicVoltage(0);
     SetConfiguration();
-    ResetPosition();  
     elevatorEntry = Dashboard.getElevatorEntry();
+    ResetPosition();  
   }
     
   public void SetSpeed(double speed) {   
@@ -35,13 +35,13 @@ public class ElevatorSubsystem extends SubsystemBase {
   public double GetPostion() {
     var signal = talon.getPosition();
     double position = signal.getValueAsDouble();
-    elevatorEntry.setDouble(position);
+    elevatorEntry.setDouble(position); //does not reset position whatsoever, making the encoder and dashboard disagree
     return position;
   }
 
   public void ResetPosition() {
     talon.setPosition(0.0);
-    SmartDashboard.putNumber(DashboardKeys.ELEVATOR_POSITION, 0.0);
+    elevatorEntry.setDouble(0);
   }
 
   public void SetPosition(double position) {
@@ -68,9 +68,13 @@ public class ElevatorSubsystem extends SubsystemBase {
       .withKV(0.0)
       .withKD(0.02);
 
+    var openLoopRamps = new OpenLoopRampsConfigs() //added this to stop harsh manual movements
+    .withDutyCycleOpenLoopRampPeriod(0.3);
+
     var talonFXConfig = new TalonFXConfiguration()
       .withMotorOutput(motorOutputConfig)
       .withSlot0(slot0Config)
+      .withOpenLoopRamps(openLoopRamps)
       .withMotionMagic(magicMotionConfig);
 
     talon.getConfigurator().apply(talonFXConfig);

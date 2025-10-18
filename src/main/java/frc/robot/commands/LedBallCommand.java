@@ -17,7 +17,7 @@ public class LedBallCommand extends Command {
 
   @Override
   public void initialize() {
-    if (algaeGrabberSub.isBallCaputured()) {
+     if (algaeGrabberSub.isBallCaputured()) {
       ledSub.setColor(LedSubsystem.Color.GREEN);
     } else {
       ledSub.resetColor();
