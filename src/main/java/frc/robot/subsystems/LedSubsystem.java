@@ -71,9 +71,9 @@ public class LedSubsystem extends SubsystemBase {
 
   public void setColor(int color) {
     currentColor = color;
-    if (color != Color.DEFAULT) {
+    //if (color != Color.DEFAULT) {
       color = color + mode;
-    }
+    //}
     arduino.write(ADDRESS_COLOR, color);
   }
 

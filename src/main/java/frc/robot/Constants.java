@@ -2,10 +2,10 @@ package frc.robot;
 
 public final class Constants {
   
-  public static final class DashboardKeys {
-    public static final String DOOR_POSITION = "Door Position";
-    public static final String ELEVATOR_POSITION = "Elevator Position";
-  }
+  // public static final class DashboardKeys {
+  //   public static final String DOOR_POSITION = "Door Position";
+  //   public static final String ELEVATOR_POSITION = "Elevator Position";
+  // }
 
   public static final class ElevatorLevels {
     public static final int LEVEL1 = 1;
