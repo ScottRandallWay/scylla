@@ -34,6 +34,7 @@ public final class Constants {
 
     public static final class DriverLeft {
       public static final int TURBO_MODE_BUTTON = 1;
+      public static final int CAMERA_TEST_BUTTON = 2;
       public static final int STRAFE_LEFT_BUTTON = 3;
       public static final int STRAFE_RIGHT_BUTTON = 4;
     }

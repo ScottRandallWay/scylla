@@ -1,6 +1,9 @@
 package frc.robot;
 
+import java.util.Map;
+
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public final class Dashboard {
@@ -32,27 +35,21 @@ public final class Dashboard {
       .getEntry();
   }
 
+  public static GenericEntry getHasTargetEntry() {
+    return Shuffleboard.getTab(DRIVE_TAB)
+      .add("HasTarget", false)
+      .withWidget(BuiltInWidgets.kBooleanBox)
+      .withProperties(Map.of("colorwhentrue", "green", "colorwhenfalse", "red"))
+      .withSize(1,1)
+      .withPosition(3, 0)
+      .getEntry();      
+  }
+
   public static GenericEntry getTagEntry() {
     return Shuffleboard.getTab(DRIVE_TAB)
       .add("Tag ID", 0)
       .withSize(1, 1)
-      .withPosition(1, 1)
-      .getEntry(); 
-  }
-
-  public static GenericEntry getTagSpeedEntry() {
-    return Shuffleboard.getTab(DRIVE_TAB)
-      .add("Tag Speed", 0)
-      .withSize(1, 1)
-      .withPosition(2, 1)
-      .getEntry(); 
-  }
-
-  public static GenericEntry getTagAngleEntry() {
-    return Shuffleboard.getTab(DRIVE_TAB)
-      .add("Tag Angle", 0)
-      .withSize(1, 1)
-      .withPosition(2, 2)
+      .withPosition(4, 0)
       .getEntry(); 
   }
 
@@ -60,16 +57,25 @@ public final class Dashboard {
     return Shuffleboard.getTab(DRIVE_TAB)
       .add("Tag Tx", 0)
       .withSize(1, 1)
-      .withPosition(1, 3)
+      .withPosition(5, 0)
       .getEntry(); 
   }
 
-  public static GenericEntry getTagTyEntry() {
+  public static GenericEntry getTargetDistance() {
     return Shuffleboard.getTab(DRIVE_TAB)
-      .add("Tag Ty", 0)
-      .withSize(1, 1)
-      .withPosition(2, 3)
-      .getEntry(); 
+      .add("TargetDistance", 0.0)
+      .withSize(1,1)
+      .withPosition(6, 0)
+      .getEntry();
   }
 
+  public static GenericEntry getYawEntry() {
+    return Shuffleboard.getTab(DRIVE_TAB)
+      .add("TargetYaw", 0)
+      .withSize(1,1)
+      .withPosition(7,0)
+      .getEntry();
+  }
+
+  
 }

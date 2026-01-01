@@ -29,6 +29,7 @@ import frc.robot.commands.ElevatorSetCommand;
 import frc.robot.commands.LedBallCommand;
 import frc.robot.Constants.PnuematicChannels;
 import frc.robot.Constants.TimeConstants;
+import frc.robot.Constants.ButtonIndex.DriverLeft;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
@@ -51,7 +52,7 @@ public class RobotContainer {
   private final LedSubsystem ledSub;
   private final ElevatorSubsystem elevatorSub;
   private final CoralSubsystem coralSub;
-  //private final CameraSubsystem cameraSub;
+  private final CameraSubsystem cameraSub;
   private final Joystick operatorLeftStick;
   private final Joystick operatorRightStick;
   private final Joystick driverLeftStick;
@@ -82,7 +83,7 @@ public class RobotContainer {
     ledSub = new LedSubsystem();
     elevatorSub = new ElevatorSubsystem();
     coralSub = new CoralSubsystem();
-    //cameraSub = new CameraSubsystem();
+    cameraSub = new CameraSubsystem();
 
     // named commands for path planner
     NamedCommands.registerCommand("homeElevator", new ElevatorSetCommand(elevatorSub, 7));
@@ -186,10 +187,10 @@ public class RobotContainer {
       .onTrue(new AlgaeGrabCommand(algaeGrabberSub, ledSub)        
     );
 
-    // // track april tag
-    // new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ALGAE_GRAB_BUTTON)
-    //   .whileTrue(new CameraAimCommand(cameraSub, MaxSpeed, -0.1, 0.005, MaxAngularRate));  
-
+    // track april tag
+    new JoystickButton(driverLeftStick, ButtonIndex.DriverLeft.CAMERA_TEST_BUTTON)
+       .whileTrue(new CameraAimCommand(cameraSub, drivetrain));  
+    
     // eject algae
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ALGAE_SET_BUTTON)
       .onTrue(

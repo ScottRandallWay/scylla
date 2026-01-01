@@ -907,9 +907,6 @@ public class LimelightHelpers {
     return getLimelightNTStringArray(limelightName, "rawbarcodes");
   }
 
-  /////
-  /////
-
   public static Pose3d getBotPose3d(String limelightName) {
     double[] poseArray = getLimelightNTDoubleArray(limelightName, "botpose");
     return toPose3D(poseArray);
