@@ -51,7 +51,7 @@ public class ElevatorSetCommand extends Command {
     
     // starting postion when command starts
     startingPosition = elevatorSub.GetPostion();
-    
+        
     // rate of acceleration 
     accel = (highSpeed - lowSpeed) / slowZone;
   }

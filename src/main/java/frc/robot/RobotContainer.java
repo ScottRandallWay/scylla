@@ -19,6 +19,7 @@ import frc.robot.commands.AlgaeEjectCommand;
 import frc.robot.commands.AlgaeGrabCommand;
 import frc.robot.commands.AlgaeToggleCommand;
 import frc.robot.commands.CameraAimCommand;
+import frc.robot.commands.CameraAim2Command;
 import frc.robot.commands.ClimbMoveCommand;
 import frc.robot.commands.CoralSetCommand;
 import frc.robot.commands.CoralShootCommand;
@@ -189,7 +190,7 @@ public class RobotContainer {
 
     // track april tag
     new JoystickButton(driverLeftStick, ButtonIndex.DriverLeft.CAMERA_TEST_BUTTON)
-       .whileTrue(new CameraAimCommand(cameraSub, drivetrain));  
+       .whileTrue(new CameraAim2Command(cameraSub, drivetrain));  
     
     // eject algae
     new JoystickButton(operatorRightStick, ButtonIndex.OperatorRight.ALGAE_SET_BUTTON)

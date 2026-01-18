@@ -77,5 +77,36 @@ public final class Dashboard {
       .getEntry();
   }
 
+  public static GenericEntry getTag2Entry() {
+    return Shuffleboard.getTab(DRIVE_TAB)
+      .add("Tag2 ID", 0)
+      .withSize(1, 1)
+      .withPosition(4, 1)
+      .getEntry(); 
+  }
+
+  public static GenericEntry getTag2TxEntry() {
+    return Shuffleboard.getTab(DRIVE_TAB)
+      .add("Tag2 Tx", 0)
+      .withSize(1, 1)
+      .withPosition(5, 1)
+      .getEntry(); 
+  }
+
+  public static GenericEntry getTarget2Distance() {
+    return Shuffleboard.getTab(DRIVE_TAB)
+      .add("Target2Distance", 0.0)
+      .withSize(1,1)
+      .withPosition(6, 1)
+      .getEntry();
+  }
+
+  public static GenericEntry getYaw2Entry() {
+    return Shuffleboard.getTab(DRIVE_TAB)
+      .add("Target2Yaw", 0)
+      .withSize(1,1)
+      .withPosition(7,1)
+      .getEntry();
+  }
   
 }
